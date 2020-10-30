@@ -297,7 +297,7 @@ async function getContractBalanceRate(contract) {
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
   document.getElementById("actualCapital").value =
-    invester.trxDeposit.toTwos() / 2;
+    invester.trxDeposit.toNumber() / 2;
 }
 
 /**
@@ -306,9 +306,19 @@ async function getDeposit(contract) {
  */
 async function getProfit(contract) {
   let profit = await contract.getProfit(currentAccount).call();
-  document.getElementById("withdrawableAmount").value = profit.toNumber() / 2;
-  document.getElementById("withdrawableInterest").value = profit.toNumber() / 2;
+  const halfProfit = profit.toNumber() / 2;
+  document.getElementById("withdrawableAmount").value = halfProfit;
+  jQuery(".deduction").text(halfProfit);
+  document.getElementById("withdrawableInterest").value = halfProfit;
   document.getElementById("totalWithdrawable").value = profit.toNumber();
+  jQuery("#invested").text(profit.toNumber());
+  jQuery("#withdrawal").text(halfProfit / 2);
+  jQuery("#reinvest-new-balance").text(
+    parseInt(document.getElementById("actualCapital").value) + halfProfit
+  );
+  jQuery("#withdrawal-new-balance").text(
+    parseInt(document.getElementById("actualCapital").value) + halfProfit
+  );
 }
 
 /**
@@ -323,3 +333,5 @@ function showPopup(error) {
     $(".error-popover").toggleClass("show");
   }, 5000);
 }
+
+$("#reinvestModal").on("show.bs.modal", function (e) {});

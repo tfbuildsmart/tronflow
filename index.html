@@ -483,7 +483,10 @@
 
                 <div class="form-row align-items-center">
                   <div class="col-12 my-1 text-left">
-                    <label class="text-white m-0 mt-2" for="withdrawableInterest">
+                    <label
+                      class="text-white m-0 mt-2"
+                      for="withdrawableInterest"
+                    >
                       <h5>Withdrawable Interest</h5>
                     </label>
                   </div>
@@ -608,9 +611,10 @@
               </button>
             </div>
             <div class="modal-body">
-              If you reinvest Xxxx trx willbe deducted from your active deposit
-              and Xxxxx will be reinvested. Your new active deposit will be
-              Xxxxx.
+              If you reinvest. <span class="deduction">0</span> trx will be deducted
+              from your active deposit and <span id="invested">0</span> will be
+              reinvested. Your new active deposit will be
+              <span id="reinvest-new-balance">0</span>.
               <br />
               <br />
               Click <b>Yes</b> to accept or <b>No</b> to cancel.
@@ -624,7 +628,9 @@
               >
                 Yes
               </button>
-              <button type="button" class="btn btn-dark">No</button>
+              <button type="button" class="btn btn-dark" data-dismiss="modal">
+                No
+              </button>
             </div>
           </div>
         </div>
@@ -655,8 +661,10 @@
               </button>
             </div>
             <div class="modal-body">
-              If you withdraw XXXX amount will be deducted, and Xxxx (25%) will
-              be reinvested. Your new active deposit will be Xxxxx.
+              If you withdraw <span class="deduction">0</span> amount will be
+              deducted, and <span id="withdrawal">0</span> (25%) will be
+              reinvested. Your new active deposit will be
+              <span id="withdrawal-new-balance">0</span>.
               <br />
               <br />
               Click <b>Yes</b> to accept or <b>No</b> to cancel.
@@ -670,7 +678,9 @@
               >
                 Yes
               </button>
-              <button type="button" class="btn btn-dark">No</button>
+              <button type="button" class="btn btn-dark" data-dismiss="modal">
+                No
+              </button>
             </div>
           </div>
         </div>
