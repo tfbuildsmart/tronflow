@@ -176,6 +176,7 @@ async function checkConnection(e) {
     $(document).ready(async function () {
       document.getElementById("accoutRef").value =
         window.location.hostname + "?ref=" + currentAccount;
+      jQuery("#address").text(currentAccount);
 
       let contract = await tronWeb.contract().at(contractAddress);
 
