@@ -160,7 +160,7 @@ const abi = [
   },
 ];
 let connection;
-let mainAccount;
+let currentAccount;
 const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
 
 window.addEventListener("message", (e) => {
@@ -172,10 +172,19 @@ async function checkConnection(e) {
   if (window.tronWeb?.defaultAddress?.base58) {
     showPopup("Connected to Tron LINK.");
 
-    mainAccount = window.tronWeb.defaultAddress.base58;
-    jQuery(document).ready(function () {
+    currentAccount = window.tronWeb.defaultAddress.base58;
+    $(document).ready(async function () {
       document.getElementById("accoutRef").value =
-        window.location.hostname + "?ref=" + mainAccount;
+        window.location.hostname + "?ref=" + currentAccount;
+
+      let contract = await tronWeb.contract().at(contractAddress);
+
+      getTotalInvested(contract);
+      getTotalInvestors(contract);
+      getContractBalanceRate(contract);
+      getDeposit(contract);
+      getProfit(contract);
+
       getBalanceOfAccount();
     });
   } else {
@@ -204,9 +213,13 @@ async function checkConnection(e) {
 // }
 //----------------//
 async function getBalanceOfAccount() {
-  tronWeb.trx.getBalance(mainAccount, function (err, res) {
-    let balance = res / 1000000;
-    jQuery("#getBalance").text(parseInt(balance));
+  tronWeb.trx.getBalance(currentAccount, function (err, res) {
+    const balance = parseInt(res / 1000000);
+    if (balance) {
+      jQuery("#getBalance").text(balance);
+    } else {
+      jQuery("#getBalance").text(0);
+    }
   });
 }
 async function deposit() {
@@ -250,6 +263,58 @@ async function reinvest() {
     });
 }
 
+/**
+ * get total Invested
+ * @param {*} contract
+ */
+async function getTotalInvested(contract) {
+  let totalinvested = await contract.totalInvested().call();
+  jQuery("#totalInvested").text(totalinvested.toNumber() / 1000000);
+}
+
+/**
+ * get total Investors
+ * @param {*} contract
+ */
+async function getTotalInvestors(contract) {
+  let totalInvestors = await contract.totalPlayers().call();
+  jQuery("#totalInvestors").text(totalInvestors.toNumber());
+}
+
+/**
+ * get Contract Balance Rate
+ * @param {*} contract
+ */
+async function getContractBalanceRate(contract) {
+  let contractbalanceRate = await contract.getContractBalanceRate().call();
+  jQuery("#roi").text(contractbalanceRate.toNumber() / 10 + 1);
+}
+
+/**
+ * get Deposit
+ * @param {*} contract
+ */
+async function getDeposit(contract) {
+  let invester = await contract.players(currentAccount).call();
+  document.getElementById("actualCapital").value =
+    invester.trxDeposit.toTwos() / 2;
+}
+
+/**
+ *
+ * @param {*} contract
+ */
+async function getProfit(contract) {
+  let profit = await contract.getProfit(currentAccount).call();
+  document.getElementById("withdrawableAmount").value = profit.toNumber() / 2;
+  document.getElementById("withdrawableInterest").value = profit.toNumber() / 2;
+  document.getElementById("totalWithdrawable").value = profit.toNumber();
+}
+
+/**
+ * show Popup
+ * @param {*} error
+ */
 function showPopup(error) {
   $("#popup-error-msg").html(error);
 
