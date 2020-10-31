@@ -161,7 +161,8 @@ const abi = [
 ];
 let connection;
 let currentAccount;
-const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+//const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   if (e.data.message && e.data.message.action == "tabReply") {
