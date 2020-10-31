@@ -299,8 +299,8 @@ async function reinvest() {
  * @param {*} contract
  */
 async function getTotalInvested(contract) {
-  let totalinvested = await contract.totalInvested().call();
-  $("#totalInvested").text(totalinvested.toNumber() / 1000000);
+  let totalInvested = await contract.totalInvested().call();
+  $("#totalInvested").text(parseInt(totalInvested.toNumber() / 1000000));
 }
 
 /**
