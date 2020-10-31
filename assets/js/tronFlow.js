@@ -161,8 +161,8 @@ const abi = [
 ];
 let currentAccount;
 let lastTransactionTime;
-//const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
-const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   console.log(e);
@@ -349,8 +349,8 @@ async function getProfit(contract) {
   $("#withdrawableAmount").val(halfProfit);
   $(".deduction").text(halfProfit);
   $("#withdrawableInterest").val(halfProfit);
-  $("#totalWithdrawable").val(profit.toNumber());
-  $("#invested").text(profit.toNumber());
+  $("#totalWithdrawable").val(profit.toNumber() / 1000000);
+  $("#invested").text(profit.toNumber() / 1000000);
   $("#withdrawal").text(halfProfit / 2);
   $("#reinvest-new-balance").text(
     parseInt($("#actualCapital").val()) + halfProfit
