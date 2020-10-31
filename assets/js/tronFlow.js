@@ -161,8 +161,8 @@ const abi = [
 ];
 let currentAccount;
 let lastTransactionTime;
-const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
-// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+//const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+ const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   console.log(e);
