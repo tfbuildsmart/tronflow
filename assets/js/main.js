@@ -1,11 +1,3 @@
-// on load
-$(window).on("load", function () {
-  const url = new URL(window.location);
-  const params = new URLSearchParams(url.search);
-  if (params.has("ref")) {
-    document.getElementById("reffererAddress").value = params.get("ref");
-  }
-});
 // onScroll
 $(window).on("scroll", function () {
   var scrollTop = $(window).scrollTop();

@@ -292,7 +292,7 @@
               <form>
                 <div class="form-row align-items-center">
                   <div class="col-12 my-1 text-left">
-                    <label class="text-white m-0" for="reffererAddress">
+                    <label class="text-white m-0" for="refererAddress">
                       <h5>Sponsor</h5>
                     </label>
                   </div>
@@ -301,7 +301,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        id="reffererAddress"
+                        id="refererAddress"
                       />
                     </div>
                   </div>
@@ -392,7 +392,7 @@
                   <input
                     type="text"
                     class="form-control"
-                    id="depositamount"
+                    id="depositAmount"
                     value="50"
                   />
                   <div class="input-group-append">
@@ -738,7 +738,7 @@
                 type="text"
                 readonly
                 class="form-control h-auto py-2"
-                id="accoutRef"
+                id="accountRef"
               />
             </div>
             <div class="col-4">
@@ -1247,9 +1247,15 @@
       </p>
     </div>
 
-    <div class="error-popover">
+    <div class="popup error-popover">
       <div class="box">
         <p id="popup-error-msg" class="text-white m-0"></p>
+      </div>
+    </div>
+
+    <div class="popup success-popover">
+      <div class="box">
+        <p id="popup-success-msg" class="text-white m-0"></p>
       </div>
     </div>
 

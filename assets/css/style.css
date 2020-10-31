@@ -247,7 +247,7 @@ footer .nav {
 }
 
 /* Error Popover */
-.error-popover {
+.popup {
   display: flex;
   width: 100%;
   position: fixed;
@@ -256,15 +256,24 @@ footer .nav {
   z-index: 9999;
 }
 
-.error-popover .box {
+.popup.show {
+  top: 10px !important;
+}
+
+.popup .box {
   margin: auto;
   padding: 10px 20px;
-  background: rgb(255 0 0);
-  box-shadow: 1px 1px 10px 4px rgb(255 0 0);
   max-width: 100%;
 }
-.error-popover.show {
-  top: 10px !important;
+
+.error-popover .box {
+  background: rgb(255 0 0 / 0.8);
+  box-shadow: 1px 1px 10px 4px rgb(255 0 0 / 0.8);
+}
+
+.success-popover .box {
+  background: rgb(40 167 69 / 0.8);
+  box-shadow: 1px 1px 10px 4px rgb(40 167 69 / 0.8);
 }
 
 /* Media Queries */

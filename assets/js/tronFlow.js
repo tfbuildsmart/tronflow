@@ -159,60 +159,56 @@ const abi = [
     type: "Event",
   },
 ];
-let connection;
 let currentAccount;
-//const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
-const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+let lastTransactionTime;
+const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
-  if (e.data.message && e.data.message.action == "tabReply") {
-    console.log("tabReply event", e.data.message);
-    if (e.data.message.data.data.node.chain == "_") {
-      console.log("tronLink currently selects the main chain");
+  console.log(e);
+
+  if (e.data?.message?.action == "tabReply") {
+    console.warn("tabReply event", e.data.message);
+    if (e.data?.message?.data?.data?.node?.chain == "_") {
+      console.info("tronLink currently selects the main chain");
     } else {
-      console.log("tronLink currently selects the side chain");
+      console.info("tronLink currently selects the side chain");
     }
   }
 
-  if (e.data.message && e.data.message.action == "setAccount") {
-    console.log("setAccount event", e.data.message);
-    console.log("current address:", e.data.message.data.address);
+  if (e.data?.message?.action == "setAccount") {
+    console.warn("setAccount event", e.data.message);
+    console.info("current address:", e.data.message.data.address);
   }
-  if (e.data.message && e.data.message.action == "setNode") {
-    console.log("setNode event", e.data.message);
-    if (e.data.message.data.node.chain == "_") {
-      console.log("tronLink currently selects the main chain");
+  if (e.data?.message?.action == "setNode") {
+    console.warn("setNode event", e.data.message);
+    if (e.data?.message?.data?.data?.node?.chain == "_") {
+      console.info("tronLink currently selects the main chain");
     } else {
-      console.log("tronLink currently selects the side chain");
+      console.info("tronLink currently selects the side chain");
     }
   }
-  checkConnection();
 });
 
 /**
  *
  */
-var checkConnectivity = setInterval(async () => {
-  if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-    clearInterval(checkConnectivity);
-    showPopup("Connected to Tron LINK.");
-
-    const tronWeb = window.tronWeb;
-    currentAccount = tronWeb.defaultAddress.base58;
-  } else {
-    showPopup("Tron LINK is not available");
+$(document).ready(async () => {
+  const url = new URL(window.location);
+  const params = new URLSearchParams(url.search);
+  if (params.has("ref")) {
+    $("#refererAddress").val(params.get("ref"));
   }
-}, 10);
-// ---------------//
-async function checkConnection() {
-  if (window.tronWeb?.defaultAddress?.base58) {
-    // showPopup("Connected to Tron LINK.");
 
-    // currentAccount = window.tronWeb.defaultAddress.base58;
-    $(document).ready(async function () {
-      document.getElementById("accoutRef").value =
-        window.location.hostname + "?ref=" + currentAccount;
-      jQuery("#address").text(currentAccount);
+  var checkConnectivity = setInterval(async () => {
+    if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+      clearInterval(checkConnectivity);
+      showPopup("Connected to Tron LINK.", "success");
+
+      const tronWeb = window.tronWeb;
+      currentAccount = tronWeb.defaultAddress.base58;
+      $("#accountRef").val(window.location.hostname + "?ref=" + currentAccount);
+      $("#address").text(currentAccount);
 
       let contract = await tronWeb.contract().at(contractAddress);
 
@@ -223,72 +219,88 @@ async function checkConnection() {
       getProfit(contract);
 
       getBalanceOfAccount();
-    });
-    // } else {
-    //   showPopup("Tron LINK is not available");
-  }
-}
-//----------------//
-// async function isLocked() {
-//   if (window.tronWeb.defaultAddress.base58 == null) {
-//     console.log(err);
-//     jQuery("#lock").text(err);
-//   } else if (window.tronWeb.defaultAddress.base58 === 0) {
-//     jQuery("#lock").text("TRON LINK is locked.");
-//   } else {
-//     jQuery("#lock").text("TRON LINK is unlocked.");
-//   }
-// }
+    }
+  }, 10);
+});
 //----------------//
 async function getBalanceOfAccount() {
-  tronWeb.trx.getBalance(currentAccount, function (err, res) {
+  return tronWeb.trx.getBalance(currentAccount).then((res) => {
     const balance = parseInt(res / 1000000);
     if (balance) {
-      jQuery("#getBalance").text(balance);
+      $("#getBalance").text(balance);
     } else {
-      jQuery("#getBalance").text(0);
+      $("#getBalance").text(0);
     }
+    return balance;
   });
 }
 async function deposit() {
   // TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v
-  let address = jQuery("#reffererAddress").val();
-  let amount = jQuery("#depositamount").val();
+  let address = $("#refererAddress").val();
+  let amount = $("#depositAmount").val();
   if (address.length < 10) {
-    showPopup("Please Enter Right Address");
+    showPopup("Please Enter Right Address", "error");
   } else if (amount < 50) {
-    showPopup("Minimum Amount is 50 TRX");
+    showPopup("Minimum Amount is 50 TRX", "error");
   } else {
-    let contract = await tronWeb.contract().at(contractAddress);
-    contract
-      .deposit(address)
-      .send({
-        callValue: tronWeb.toSun(amount),
-      })
-      .then((output) => {
-        console.log("Hash ID:", output, "\n");
-      });
+    if (window.tronWeb) {
+      let contract = await tronWeb.contract().at(contractAddress);
+      contract
+        .deposit(address)
+        .send({
+          callValue: tronWeb.toSun(amount),
+        })
+        .then((output) => {
+          // var newBalance = setInterval(async () => {
+          //   const newBal = getBalanceOfAccount();
+          //   console.log(newBal);
+          // }, 1000);
+          console.info("Hash ID:", output, "\n");
+          showPopup("Deposit Successful", "success");
+        });
+    } else {
+      showPopup("TronWeb is not Connected", "error");
+    }
   }
 }
 //withDraw your fund!
 async function withdraw() {
-  let contract = await tronWeb.contract().at(contractAddress);
-  await contract
-    .withdraw()
-    .send()
-    .then((output) => {
-      console.log("HashId:" + " " + output);
-    });
+  if (window.tronWeb) {
+    let contract = await tronWeb.contract().at(contractAddress);
+    await contract
+      .withdraw()
+      .send()
+      .then((output) => {
+        getBalanceOfAccount();
+        console.info("HashId:" + " " + output);
+        showPopup("Withdraw Successful", "success");
+      });
+  } else {
+    showPopup("TronWeb is not Connected", "error");
+  }
 }
 //reinvest your fund!
 async function reinvest() {
-  let contract = await tronWeb.contract().at(contractAddress);
-  await contract
-    .reinvest()
-    .send()
-    .then((output) => {
-      console.log("HashId:" + " " + output);
-    });
+  if (window.tronWeb) {
+    let contract = await tronWeb.contract().at(contractAddress);
+    await contract
+      .reinvest()
+      .send()
+      .then((output) => {
+        // var newBalance = setInterval(async () => {
+        //   const newBal = await getBalanceOfAccount();
+        //   console.log(newBal);
+
+        //   setTimeout(() => {
+        //     clearInterval(newBalance);
+        //   }, 60 * 1000);
+        // }, 100);
+        console.info("HashId:" + " " + output);
+        showPopup("Reinvest Successful", "success");
+      });
+  } else {
+    showPopup("TronWeb is not Connected", "error");
+  }
 }
 
 /**
@@ -297,7 +309,7 @@ async function reinvest() {
  */
 async function getTotalInvested(contract) {
   let totalinvested = await contract.totalInvested().call();
-  jQuery("#totalInvested").text(totalinvested.toNumber() / 1000000);
+  $("#totalInvested").text(totalinvested.toNumber() / 1000000);
 }
 
 /**
@@ -306,7 +318,7 @@ async function getTotalInvested(contract) {
  */
 async function getTotalInvestors(contract) {
   let totalInvestors = await contract.totalPlayers().call();
-  jQuery("#totalInvestors").text(totalInvestors.toNumber());
+  $("#totalInvestors").text(totalInvestors.toNumber());
 }
 
 /**
@@ -315,7 +327,7 @@ async function getTotalInvestors(contract) {
  */
 async function getContractBalanceRate(contract) {
   let contractbalanceRate = await contract.getContractBalanceRate().call();
-  jQuery("#roi").text(contractbalanceRate.toNumber() / 10 + 1);
+  $("#roi").text(contractbalanceRate.toNumber() / 10 + 1);
 }
 
 /**
@@ -324,8 +336,7 @@ async function getContractBalanceRate(contract) {
  */
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
-  document.getElementById("actualCapital").value =
-    invester.trxDeposit.toNumber() / 2;
+  $("#actualCapital").val(invester.trxDeposit.toNumber() / 2);
 }
 
 /**
@@ -335,17 +346,17 @@ async function getDeposit(contract) {
 async function getProfit(contract) {
   let profit = await contract.getProfit(currentAccount).call();
   const halfProfit = profit.toNumber() / 2;
-  document.getElementById("withdrawableAmount").value = halfProfit;
-  jQuery(".deduction").text(halfProfit);
-  document.getElementById("withdrawableInterest").value = halfProfit;
-  document.getElementById("totalWithdrawable").value = profit.toNumber();
-  jQuery("#invested").text(profit.toNumber());
-  jQuery("#withdrawal").text(halfProfit / 2);
-  jQuery("#reinvest-new-balance").text(
-    parseInt(document.getElementById("actualCapital").value) + halfProfit
+  $("#withdrawableAmount").val(halfProfit);
+  $(".deduction").text(halfProfit);
+  $("#withdrawableInterest").val(halfProfit);
+  $("#totalWithdrawable").val(profit.toNumber());
+  $("#invested").text(profit.toNumber());
+  $("#withdrawal").text(halfProfit / 2);
+  $("#reinvest-new-balance").text(
+    parseInt($("#actualCapital").val()) + halfProfit
   );
-  jQuery("#withdrawal-new-balance").text(
-    parseInt(document.getElementById("actualCapital").value) + halfProfit
+  $("#withdrawal-new-balance").text(
+    parseInt($("#actualCapital").val()) + halfProfit
   );
 }
 
@@ -353,13 +364,13 @@ async function getProfit(contract) {
  * show Popup
  * @param {*} error
  */
-function showPopup(error) {
-  $("#popup-error-msg").html(error);
+function showPopup(msg, type) {
+  $(`#popup-${type}-msg`).html(msg);
 
-  $(".error-popover").toggleClass("show");
-  window.setTimeout(function () {
-    $(".error-popover").toggleClass("show");
-  }, 5000);
+  $(".popup").removeClass("show");
+
+  $(`.${type}-popover`).addClass("show");
+  window.setTimeout(() => {
+    $(`.${type}-popover`).removeClass("show");
+  }, 3 * 1000);
 }
-
-$("#reinvestModal").on("show.bs.modal", function (e) {});
