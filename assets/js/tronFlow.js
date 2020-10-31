@@ -162,7 +162,7 @@ const abi = [
 let currentAccount;
 let lastTransactionTime;
 //const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
- const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   console.log(e);
@@ -227,9 +227,9 @@ async function getBalanceOfAccount() {
   return tronWeb.trx.getBalance(currentAccount).then((res) => {
     const balance = parseInt(res / 1000000);
     if (balance) {
-      $("#getBalance").text(balance);
+      $("#balance").text(balance);
     } else {
-      $("#getBalance").text(0);
+      $("#balance").text(0);
     }
     return balance;
   });
@@ -336,7 +336,7 @@ async function getContractBalanceRate(contract) {
  */
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
-  $("#actualCapital").val(invester.trxDeposit.toNumber() / 2);
+  $("#actualCapital").val(invester.trxDeposit.toNumber() / 1000000);
 }
 
 /**
@@ -345,7 +345,7 @@ async function getDeposit(contract) {
  */
 async function getProfit(contract) {
   let profit = await contract.getProfit(currentAccount).call();
-  const halfProfit = profit.toNumber() / 2;
+  const halfProfit = profit.toNumber() / 2000000;
   $("#withdrawableAmount").val(halfProfit);
   $(".deduction").text(halfProfit);
   $("#withdrawableInterest").val(halfProfit);
