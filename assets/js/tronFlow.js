@@ -161,8 +161,8 @@ const abi = [
 ];
 let currentAccount;
 let lastTransactionTime;
-const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
-// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+// const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   console.log(e);
@@ -202,15 +202,15 @@ $(document).ready(async () => {
 
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-      clearInterval(checkConnectivity);
-      showPopup("Connected to Tron LINK.", "success");
+      // clearInterval(checkConnectivity);
+      // showPopup("Connected to Tron LINK.", "success");
 
       const tronWeb = window.tronWeb;
       currentAccount = tronWeb.defaultAddress.base58;
       $("#accountRef").val(window.location.hostname + "?ref=" + currentAccount);
       $("#address").text(currentAccount);
 
-      let contract = await tronWeb.contract().at(contractAddress);
+      const contract = await tronWeb.contract().at(contractAddress);
 
       getTotalInvested(contract);
       getTotalInvestors(contract);
@@ -220,7 +220,7 @@ $(document).ready(async () => {
 
       getBalanceOfAccount();
     }
-  }, 10);
+  }, 2000);
 });
 //----------------//
 async function getBalanceOfAccount() {
@@ -238,10 +238,13 @@ async function deposit() {
   // TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v
   let address = $("#refererAddress").val();
   let amount = $("#depositAmount").val();
+  const contract = await tronWeb.contract().at(contractAddress);
   if (address.length < 10) {
     showPopup("Please Enter Right Address", "error");
   } else if (amount < 50) {
     showPopup("Minimum Amount is 50 TRX", "error");
+  } else if (amount > (await getBalanceOfAccount())) {
+    showPopup("Insufficient Balance", "error");
   } else {
     if (window.tronWeb) {
       let contract = await tronWeb.contract().at(contractAddress);
@@ -251,10 +254,6 @@ async function deposit() {
           callValue: tronWeb.toSun(amount),
         })
         .then((output) => {
-          // var newBalance = setInterval(async () => {
-          //   const newBal = getBalanceOfAccount();
-          //   console.log(newBal);
-          // }, 1000);
           console.info("Hash ID:", output, "\n");
           showPopup("Deposit Successful", "success");
         });
@@ -287,14 +286,6 @@ async function reinvest() {
       .reinvest()
       .send()
       .then((output) => {
-        // var newBalance = setInterval(async () => {
-        //   const newBal = await getBalanceOfAccount();
-        //   console.log(newBal);
-
-        //   setTimeout(() => {
-        //     clearInterval(newBalance);
-        //   }, 60 * 1000);
-        // }, 100);
         console.info("HashId:" + " " + output);
         showPopup("Reinvest Successful", "success");
       });
@@ -336,7 +327,9 @@ async function getContractBalanceRate(contract) {
  */
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
-  $("#actualCapital").val(invester.trxDeposit.toNumber() / 1000000);
+  const deposit = invester.trxDeposit.toNumber() / 1000000;
+  $("#actualCapital").val(deposit.toFixed(6));
+  return deposit.toFixed(6);
 }
 
 /**
@@ -345,19 +338,34 @@ async function getDeposit(contract) {
  */
 async function getProfit(contract) {
   let profit = await contract.getProfit(currentAccount).call();
+  const totalProfit = profit.toNumber() / 1000000;
   const halfProfit = profit.toNumber() / 2000000;
-  $("#withdrawableAmount").val(halfProfit);
-  $(".deduction").text(halfProfit);
-  $("#withdrawableInterest").val(halfProfit);
-  $("#totalWithdrawable").val(profit.toNumber() / 1000000);
-  $("#invested").text(profit.toNumber() / 1000000);
-  $("#withdrawal").text(halfProfit / 2);
+  $("#withdrawableAmount").val(halfProfit.toFixed(6));
+  $(".deduction").text(halfProfit.toFixed(6));
+  $("#withdrawableInterest").val(halfProfit.toFixed(6));
+  $("#totalWithdrawable").val(totalProfit.toFixed(6));
+  $("#invested").text(totalProfit.toFixed(6));
+  $("#withdrawal").text((halfProfit / 2).toFixed(6));
   $("#reinvest-new-balance").text(
     parseInt($("#actualCapital").val()) + halfProfit
   );
   $("#withdrawal-new-balance").text(
     parseInt($("#actualCapital").val()) + halfProfit
   );
+}
+
+function copy() {
+  /* Get the text field */
+  var copyText = document.getElementById("accountRef");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  showPopup("Copied", "success");
 }
 
 /**

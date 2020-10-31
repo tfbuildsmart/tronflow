@@ -276,6 +276,10 @@ footer .nav {
   box-shadow: 1px 1px 10px 4px rgb(40 167 69 / 0.8);
 }
 
+.bigger-font {
+  font-size: 1.2rem;
+}
+
 /* Media Queries */
 @media (max-width: 576px) {
   .sec-title {
