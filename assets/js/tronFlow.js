@@ -161,8 +161,8 @@ const abi = [
 ];
 let currentAccount;
 let lastTransactionTime;
-// const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
-const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
+// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
 
 window.addEventListener("message", (e) => {
   console.log(e);
@@ -239,7 +239,7 @@ async function deposit() {
   let address = $("#refererAddress").val();
   let amount = $("#depositAmount").val();
   const contract = await tronWeb.contract().at(contractAddress);
-  if (address.length < 10) {
+  if (!tronWeb.isAddress(address)) {
     showPopup("Please Enter Right Address", "error");
   } else if (amount < 50) {
     showPopup("Minimum Amount is 50 TRX", "error");
