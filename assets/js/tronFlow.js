@@ -300,7 +300,7 @@ async function reinvest() {
  */
 async function getTotalInvested(contract) {
   let totalInvested = await contract.totalInvested().call();
-  $("#totalInvested").text(parseInt(totalInvested.toNumber() / 1000000));
+  $("#totalInvested").text(thousands_separators(parseInt(totalInvested.toNumber() / 1000000)));
 }
 
 /**
@@ -366,6 +366,12 @@ function copy() {
   document.execCommand("copy");
 
   showPopup("Copied", "success");
+}
+
+function thousands_separators(num) {
+  var num_parts = num.toString().split(".");
+  num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return num_parts.join(".");
 }
 
 /**
