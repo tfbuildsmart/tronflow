@@ -4,7 +4,10 @@
   --theme-blue: #1865f3;
 }
 
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
 }

@@ -164,15 +164,50 @@ let currentAccount;
 const contractAddress = "TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ";
 
 window.addEventListener("message", (e) => {
-  checkConnection(e);
+  if (e.data.message && e.data.message.action == "tabReply") {
+    console.log("tabReply event", e.data.message);
+    if (e.data.message.data.data.node.chain == "_") {
+      console.log("tronLink currently selects the main chain");
+    } else {
+      console.log("tronLink currently selects the side chain");
+    }
+  }
+
+  if (e.data.message && e.data.message.action == "setAccount") {
+    console.log("setAccount event", e.data.message);
+    console.log("current address:", e.data.message.data.address);
+  }
+  if (e.data.message && e.data.message.action == "setNode") {
+    console.log("setNode event", e.data.message);
+    if (e.data.message.data.node.chain == "_") {
+      console.log("tronLink currently selects the main chain");
+    } else {
+      console.log("tronLink currently selects the side chain");
+    }
+  }
+  checkConnection();
 });
 
-// ---------------//
-async function checkConnection(e) {
-  if (window.tronWeb?.defaultAddress?.base58) {
+/**
+ *
+ */
+var checkConnectivity = setInterval(async () => {
+  if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+    clearInterval(checkConnectivity);
     showPopup("Connected to Tron LINK.");
 
-    currentAccount = window.tronWeb.defaultAddress.base58;
+    const tronWeb = window.tronWeb;
+    currentAccount = tronWeb.defaultAddress.base58;
+  } else {
+    showPopup("Tron LINK is not available");
+  }
+}, 10);
+// ---------------//
+async function checkConnection() {
+  if (window.tronWeb?.defaultAddress?.base58) {
+    // showPopup("Connected to Tron LINK.");
+
+    // currentAccount = window.tronWeb.defaultAddress.base58;
     $(document).ready(async function () {
       document.getElementById("accoutRef").value =
         window.location.hostname + "?ref=" + currentAccount;
@@ -188,17 +223,8 @@ async function checkConnection(e) {
 
       getBalanceOfAccount();
     });
-  } else {
-    showPopup("Tron LINK is not available");
-  }
-
-  if (e.data.message && e.data.message.action == "setNode") {
-    console.log("setNode event", e.data.message);
-    if (e.data.message.data.node.chain == "_") {
-      console.log("tronLink currently selects the main chain");
-    } else {
-      console.log("tronLink currently selects the side chain");
-    }
+    // } else {
+    //   showPopup("Tron LINK is not available");
   }
 }
 //----------------//
