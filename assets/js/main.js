@@ -21,6 +21,6 @@ $(".popover-dismiss").popover({
   trigger: "focus",
 });
 
-window.setInterval(function () {
+window.setInterval(() => {
   $(".custom-popover").toggleClass("custom-popover-active");
 }, 30000);
