@@ -112,6 +112,14 @@ header .navbar {
   width: 200px;
 }
 
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+  background-color: #1865f3b0;
+}
+
+.dropdown-item{
+  color: #FFF;
+}
+
 /* Carousel Section */
 .carousel {
   border-radius: 4px;
