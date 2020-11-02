@@ -43,9 +43,6 @@ window.addEventListener('message', (e) => {
 $(document).ready(async () => {
   const url = new URL(window.location);
   const params = new URLSearchParams(url.search);
-  if (params.has('ref')) {
-    $('#refererAddress').val(params.get('ref'));
-  }
 
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
@@ -55,6 +52,12 @@ $(document).ready(async () => {
       const tronWeb = window.tronWeb;
       currentAccount = tronWeb.defaultAddress.base58;
       $('#address').text(currentAccount);
+      if (params.has('ref')) {
+        $('#refererAddress').val(params.get('ref'));
+      }
+      $('#accountRef').val(
+        'You need to invest at least 50 TRX to activate the referral link.'
+      );
 
       const contract = await tronWeb.contract().at(contractAddress);
 
@@ -196,13 +199,15 @@ async function getDeposit(contract) {
  */
 async function getProfit(contract) {
   let profit = await contract.getProfit(currentAccount).call();
-  const totalProfit = profit.toNumber() / 1000000;
-  const halfProfit = profit.toNumber() / 2000000;
-  $('#withdrawableAmount').val(halfProfit.toFixed(6));
-  $('.deduction').text(halfProfit.toFixed(6));
-  $('#withdrawableInterest').val(halfProfit.toFixed(6));
-  $('#totalWithdrawable').val(totalProfit.toFixed(6));
-  $('#invested').text(totalProfit.toFixed(6));
+
+  const totalProfit = (profit.toNumber() / 1000000).toFixed(6);
+  const halfProfit = (profit.toNumber() / 2000000).toFixed(6);
+
+  $('#withdrawableAmount').val(halfProfit);
+  $('.deduction').text(halfProfit);
+  $('#withdrawableInterest').val(halfProfit);
+  $('#totalWithdrawable').val(totalProfit);
+  $('#invested').text(totalProfit);
   $('#withdrawal').text((halfProfit / 2).toFixed(6));
   $('#reinvest-new-balance').text(
     (parseInt($('#actualCapital').val()) + halfProfit).toFixed(6)
