@@ -73,10 +73,11 @@ $(document).ready(async () => {
           window.location.hostname + '?ref=' + currentAccount
         );
       } else {
-        $('#refererAddress').prop('disabled', false);
         if (params.has('ref')) {
+          $('#refererAddress').prop('disabled', true);
           $('#refererAddress').val(params.get('ref'));
         } else if($('#refererAddress').val() == 'You Already have a Sponsor') {
+          $('#refererAddress').prop('disabled', false);
           $('#refererAddress').val('');
         }
         $('#accountRef').val(
