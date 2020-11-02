@@ -1,7 +1,12 @@
 let currentAccount;
 let lastTransactionTime;
-const contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
-// const contractAddress = "TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv";
+let contractAddress;
+
+if (window.location.hostname == "127.0.0.1") {
+  contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
+} else {
+  contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
+}
 
 const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let invested;
