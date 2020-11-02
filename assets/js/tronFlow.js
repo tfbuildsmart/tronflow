@@ -73,6 +73,7 @@ $(document).ready(async () => {
           window.location.hostname + '?ref=' + currentAccount
         );
       } else {
+        $('#refererAddress').prop('disabled', false);
         if (params.has('ref')) {
           $('#refererAddress').val(params.get('ref'));
         } else {
