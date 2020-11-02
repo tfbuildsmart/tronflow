@@ -52,12 +52,6 @@ $(document).ready(async () => {
       const tronWeb = window.tronWeb;
       currentAccount = tronWeb.defaultAddress.base58;
       $('#address').text(currentAccount);
-      if (params.has('ref')) {
-        $('#refererAddress').val(params.get('ref'));
-      }
-      $('#accountRef').val(
-        'You need to invest at least 50 TRX to activate the referral link.'
-      );
 
       const contract = await tronWeb.contract().at(contractAddress);
 
@@ -65,15 +59,46 @@ $(document).ready(async () => {
       getTotalInvestors(contract);
       getContractBalanceRate(contract);
       invested = await getDeposit(contract);
+      let profit, totalProfit, halfProfit;
       if (parseInt(invested) > 0) {
+        profit = await getProfit(contract);
+
+        totalProfit = (profit.toNumber() / 1000000).toFixed(6);
+        halfProfit = (profit.toNumber() / 2000000).toFixed(6);
+
         $('#refererAddress').val('You Already have a Sponsor');
         $('#refererAddress').prop('disabled', true);
 
         $('#accountRef').val(
           window.location.hostname + '?ref=' + currentAccount
         );
+      } else {
+        if (params.has('ref')) {
+          $('#refererAddress').val(params.get('ref'));
+        }
+        $('#accountRef').val(
+          'You need to invest at least 50 TRX to activate the referral link.'
+        );
+
+        totalProfit = halfProfit = 0;
       }
-      getProfit(contract);
+
+      $('#withdrawableAmount').val(halfProfit);
+      $('.deduction').text(halfProfit);
+      $('#withdrawableInterest').val(halfProfit);
+      $('#totalWithdrawable').val(totalProfit);
+      $('#invested').text(totalProfit);
+      $('#withdrawal').text((halfProfit / 2).toFixed(6));
+      $('#reinvest-new-balance').text(
+        parseFloat(parseFloat($('#actualCapital').val()) + halfProfit).toFixed(
+          6
+        )
+      );
+      $('#withdrawal-new-balance').text(
+        parseFloat(parseFloat($('#actualCapital').val()) + halfProfit).toFixed(
+          6
+        )
+      );
 
       getBalanceOfAccount();
     }
@@ -198,23 +223,7 @@ async function getDeposit(contract) {
  * @param {*} contract
  */
 async function getProfit(contract) {
-  let profit = await contract.getProfit(currentAccount).call();
-
-  const totalProfit = (profit.toNumber() / 1000000).toFixed(6);
-  const halfProfit = (profit.toNumber() / 2000000).toFixed(6);
-
-  $('#withdrawableAmount').val(halfProfit);
-  $('.deduction').text(halfProfit);
-  $('#withdrawableInterest').val(halfProfit);
-  $('#totalWithdrawable').val(totalProfit);
-  $('#invested').text(totalProfit);
-  $('#withdrawal').text((halfProfit / 2).toFixed(6));
-  $('#reinvest-new-balance').text(
-    (parseInt($('#actualCapital').val()) + halfProfit).toFixed(6)
-  );
-  $('#withdrawal-new-balance').text(
-    (parseInt($('#actualCapital').val()) + halfProfit).toFixed(6)
-  );
+  return await contract.getProfit(currentAccount).call();
 }
 
 function copy() {
