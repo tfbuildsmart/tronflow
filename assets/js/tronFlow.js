@@ -13,8 +13,6 @@ let invested;
 let connected = false;
 
 window.addEventListener('message', (e) => {
-  // console.log(e);
-
   if (e.data?.message?.action == 'tabReply') {
     console.warn('tabReply event', e.data.message);
     if (e.data?.message?.data?.data?.node?.chain == '_') {
@@ -22,14 +20,11 @@ window.addEventListener('message', (e) => {
     } else {
       console.info('tronLink currently selects the side chain');
     }
-  }
-
-  if (e.data?.message?.action == 'setAccount') {
+  } else if (e.data?.message?.action == 'setAccount') {
     showPopup('Account Changed', 'success');
     console.warn('setAccount event', e.data.message);
     console.info('current address:', e.data.message.data.address);
-  }
-  if (e.data?.message?.action == 'setNode') {
+  } else if (e.data?.message?.action == 'setNode') {
     console.warn('setNode event', e.data.message);
     if (e.data?.message?.data?.data?.node?.chain == '_') {
       console.info('tronLink currently selects the main chain');
@@ -81,7 +76,7 @@ $(document).ready(async () => {
         if (params.has('ref')) {
           $('#refererAddress').val(params.get('ref'));
         } else {
-          $('#refererAddress').val("");
+          $('#refererAddress').val('');
         }
         $('#accountRef').val(
           'You need to invest at least 50 TRX to activate the referral link.'
@@ -226,7 +221,11 @@ async function getContractBalanceRate(contract) {
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
   const deposit = invester.trxDeposit.toNumber() / 1000000;
-  $('#actualCapital').val(deposit.toFixed(6));
+  if (deposit > 0) {
+    $('#actualCapital').val(deposit.toFixed(6));
+  } else {
+    $('#actualCapital').val(0);
+  }
   return deposit.toFixed(6);
 }
 
