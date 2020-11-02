@@ -76,7 +76,7 @@ $(document).ready(async () => {
         if (params.has('ref')) {
           $('#refererAddress').prop('disabled', true);
           $('#refererAddress').val(params.get('ref'));
-        } else if($('#refererAddress').val() == 'Put your Sponsor Address here') {
+        } else if($('#refererAddress').val() == 'You Already have a Sponsor') {
           $('#refererAddress').prop('disabled', false);
           $('#refererAddress').val('');
         }
