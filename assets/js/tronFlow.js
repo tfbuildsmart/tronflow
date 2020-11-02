@@ -21,7 +21,7 @@ window.addEventListener('message', (e) => {
       console.info('tronLink currently selects the side chain');
     }
   } else if (e.data?.message?.action == 'setAccount') {
-    showPopup('Account Changed', 'success');
+    //showPopup('Account Changed', 'success');
     console.warn('setAccount event', e.data.message);
     console.info('current address:', e.data.message.data.address);
   } else if (e.data?.message?.action == 'setNode') {
