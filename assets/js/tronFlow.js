@@ -10,6 +10,7 @@ if (window.location.hostname == '127.0.0.1') {
 
 const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let invested;
+let connected = false;
 
 window.addEventListener('message', (e) => {
   // console.log(e);
@@ -24,6 +25,7 @@ window.addEventListener('message', (e) => {
   }
 
   if (e.data?.message?.action == 'setAccount') {
+    showPopup('Account Changed', 'success');
     console.warn('setAccount event', e.data.message);
     console.info('current address:', e.data.message.data.address);
   }
@@ -47,7 +49,10 @@ $(document).ready(async () => {
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
       // clearInterval(checkConnectivity);
-      // showPopup("Connected to Tron LINK.", "success");
+      if (!connected) {
+        showPopup('Connected to Tron LINK.', 'success');
+        connected = true;
+      }
 
       const tronWeb = window.tronWeb;
       currentAccount = tronWeb.defaultAddress.base58;
@@ -101,6 +106,11 @@ $(document).ready(async () => {
       );
 
       getBalanceOfAccount();
+    } else {
+      if (connected) {
+        showPopup('Tron LINK is disconnected.', 'error');
+        connected = false;
+      }
     }
   }, 2000);
 });
