@@ -89,7 +89,6 @@ async function getBalanceOfAccount() {
   });
 }
 async function deposit() {
-  // TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v
   let address = $('#refererAddress').val();
   let amount = $('#depositAmount').val();
   const contract = await tronWeb.contract().at(contractAddress);
