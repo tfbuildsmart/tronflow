@@ -2,7 +2,7 @@ let currentAccount;
 let lastTransactionTime;
 let contractAddress;
 
-if (window.location.hostname == "127.0.0.1") {
+if (window.location.hostname == '127.0.0.1') {
   contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
 } else {
   contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
@@ -177,7 +177,7 @@ async function getTotalInvestors(contract) {
  */
 async function getContractBalanceRate(contract) {
   let contractbalanceRate = await contract.getContractBalanceRate().call();
-  $('#roi').text(contractbalanceRate.toNumber() / 10 + 1);
+  $('#roi').text((contractbalanceRate.toNumber() / 10 + 1).toFixed(1));
 }
 
 /**
@@ -206,10 +206,10 @@ async function getProfit(contract) {
   $('#invested').text(totalProfit.toFixed(6));
   $('#withdrawal').text((halfProfit / 2).toFixed(6));
   $('#reinvest-new-balance').text(
-    parseInt($('#actualCapital').val()) + halfProfit
+    (parseInt($('#actualCapital').val()) + halfProfit).toFixed(6)
   );
   $('#withdrawal-new-balance').text(
-    parseInt($('#actualCapital').val()) + halfProfit
+    (parseInt($('#actualCapital').val()) + halfProfit).toFixed(6)
   );
 }
 
