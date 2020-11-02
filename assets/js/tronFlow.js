@@ -80,6 +80,8 @@ $(document).ready(async () => {
       } else {
         if (params.has('ref')) {
           $('#refererAddress').val(params.get('ref'));
+        } else {
+          $('#refererAddress').val("");
         }
         $('#accountRef').val(
           'You need to invest at least 50 TRX to activate the referral link.'
