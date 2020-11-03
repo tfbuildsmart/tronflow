@@ -76,7 +76,7 @@ $(document).ready(async () => {
         if (params.has('ref')) {
           $('#refererAddress').prop('disabled', true);
           $('#refererAddress').val(params.get('ref'));
-        } else if($('#refererAddress').val() == 'You Already have a Sponsor') {
+        } else if ($('#refererAddress').val() == 'You Already have a Sponsor') {
           $('#refererAddress').prop('disabled', false);
           $('#refererAddress').val('');
         }
@@ -93,15 +93,16 @@ $(document).ready(async () => {
       $('#totalWithdrawable').val(totalProfit);
       $('#invested').text(totalProfit);
       $('#withdrawal').text((halfProfit / 2).toFixed(6));
+
       $('#reinvest-new-balance').text(
-        parseFloat(parseFloat($('#actualCapital').val()) + halfProfit).toFixed(
-          6
-        )
+        parseFloat(
+          parseFloat($('#actualCapital').val()) + parseFloat(halfProfit)
+        ).toFixed(6)
       );
       $('#withdrawal-new-balance').text(
-        parseFloat(parseFloat($('#actualCapital').val()) + halfProfit).toFixed(
-          6
-        )
+        parseFloat(
+          parseFloat($('#actualCapital').val()) + parseFloat(halfProfit)
+        ).toFixed(6)
       );
 
       getBalanceOfAccount();
