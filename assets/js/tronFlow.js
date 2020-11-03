@@ -74,8 +74,10 @@ $(document).ready(async () => {
         );
       } else {
         if (params.has('ref')) {
+          $('#refererAddress').prop('disabled', true);
           $('#refererAddress').val(params.get('ref'));
-        } else {
+        } else if($('#refererAddress').val() == 'You Already have a Sponsor') {
+          $('#refererAddress').prop('disabled', false);
           $('#refererAddress').val('');
         }
         $('#accountRef').val(
