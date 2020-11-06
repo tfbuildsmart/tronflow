@@ -171,6 +171,19 @@ label h5 {
   background-color: #c7c7c7;
 }
 
+#statsModal .modal-dialog {
+  max-width: 960px;
+}
+
+.b-right{
+  border-right: 1px solid #ddd;
+}
+
+.dashed-border{
+  margin: 30px 0;
+  border-bottom: 1px dashed #ddd;
+}
+
 /* FAQ Section */
 #accordion {
   display: block;
