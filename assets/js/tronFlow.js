@@ -57,6 +57,7 @@ $(document).ready(async () => {
       getContractBalanceRate(contract);
       invested = await getDeposit(contract);
       let profit, totalProfit, halfProfit;
+
       if (parseInt(invested) > 0) {
         profit = await getProfit(contract);
 
@@ -80,20 +81,22 @@ $(document).ready(async () => {
         $('#accountRef').val(
           'You need to invest at least 50 TRX to activate the referral link.'
         );
-
-        totalProfit = halfProfit = 0;
+        invested = totalProfit = halfProfit = 0;
       }
 
       if (siteLoading) {
-        siteLoading = false
+        siteLoading = false;
+        runCounter('#actualCapital', invested);
         runCounter('#withdrawableAmount', halfProfit);
         runCounter('#withdrawableInterest', halfProfit);
         runCounter('#totalWithdrawable', totalProfit);
+      } else {
+        $('#actualCapital').val(invested);
+        $('#withdrawableAmount').val(halfProfit);
+        $('#withdrawableInterest').val(halfProfit);
+        $('#totalWithdrawable').val(totalProfit);
       }
-      // $('#withdrawableAmount').val(halfProfit);
       $('.deduction').text(halfProfit);
-      // $('#withdrawableInterest').val(halfProfit);
-      // $('#totalWithdrawable').val(totalProfit);
       $('#invested').text(totalProfit);
       $('#withdrawal').text((halfProfit / 2).toFixed(6));
 
@@ -226,11 +229,6 @@ async function getContractBalanceRate(contract) {
 async function getDeposit(contract) {
   let invester = await contract.players(currentAccount).call();
   const deposit = invester.trxDeposit.toNumber() / 1000000;
-  if (deposit > 0) {
-    $('#actualCapital').val(deposit.toFixed(6));
-  } else {
-    $('#actualCapital').val(0);
-  }
   return deposit.toFixed(6);
 }
 
