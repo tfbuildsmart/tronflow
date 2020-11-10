@@ -85,7 +85,7 @@ $(document).ready(async () => {
       }
 
       if (siteLoading) {
-        // siteLoading = false;
+        siteLoading = false;
         runCounter('#actualCapital', invested);
         runCounter('#withdrawableAmount', halfProfit);
         runCounter('#withdrawableInterest', halfProfit);
