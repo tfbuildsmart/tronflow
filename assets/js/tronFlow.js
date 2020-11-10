@@ -4,6 +4,7 @@ let contractAddress;
 let siteLoading = true;
 
 if (window.location.hostname == '127.0.0.1' || params.has('testing')) {
+  console.warn('testing');
   contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
 } else {
   contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
