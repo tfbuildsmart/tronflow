@@ -218,7 +218,7 @@ label h5 {
 #accordion .toggle-icon {
   position: absolute;
   right: 30px;
-  top: 30px;
+  top: 25px;
 }
 
 #accordion .toggle-icon i {
@@ -226,15 +226,19 @@ label h5 {
   font-size: 22px;
 }
 
-#accordion .active .fa-angle-down {
+#accordion .collapsed .fa-angle-up {
   display: none;
 }
 
-#accordion .active .fa-angle-up {
-  display: unset;
+#accordion .collapsed .fa-angle-down {
+  display: block;
 }
 
 #accordion .fa-angle-up {
+  display: block;
+}
+
+#accordion .fa-angle-down {
   display: none;
 }
 

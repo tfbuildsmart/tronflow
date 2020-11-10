@@ -40,7 +40,7 @@ $(document).ready(async () => {
   }
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-      clearInterval(checkConnectivity);
+      // clearInterval(checkConnectivity);
       if (!connected) {
         showPopup('Connected to Tron LINK.', 'success');
         connected = true;
@@ -288,21 +288,11 @@ function runCounter(id, value) {
       },
     }
   );
+}
 
-  // $(id).each(function () {
-  //   $(this)
-  //     .prop('Counter', 0)
-  //     .animate(
-  //       {
-  //         Counter: value,
-  //       },
-  //       {
-  //         duration: 1000,
-  //         easing: 'swing',
-  //         step: function (now) {
-  //           $(this).val(now.toFixed(6));
-  //         },
-  //       }
-  //     );
-  // });
+function newTransaction(transaction) {
+  $('.custom-popover').addClass('custom-popover-active');
+  window.setTimeout(() => {
+    $('.custom-popover').removeClass('custom-popover-active');
+  }, 3000);
 }
