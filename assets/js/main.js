@@ -1,9 +1,8 @@
-$(document).ready(function(){
+$(document).ready(function () {
   // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
-
+  $('a').on('click', function (event) {
     // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "" && !this.hash.indexOf("contract")) {
+    if (this.hash !== '' && !this.hash.indexOf('contract')) {
       // Prevent default anchor click behavior
       event.preventDefault();
 
@@ -12,33 +11,36 @@ $(document).ready(function(){
 
       // Using jQuery's animate() method to add smooth page scroll
       // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top - 105
-      }, 500);
+      $('html, body').animate(
+        {
+          scrollTop: $(hash).offset().top - 105,
+        },
+        500
+      );
     } // End if
   });
 });
 //onScroll
-$(window).on("scroll", () => {
+$(window).on('scroll', () => {
   var scrollTop = $(window).scrollTop();
   if (scrollTop > 50) {
-    $("#main-nav").addClass("fixed-top");
+    $('#main-nav').addClass('fixed-top');
   } else {
-    $("#main-nav").removeClass("fixed-top");
+    $('#main-nav').removeClass('fixed-top');
   }
 });
 
 // Accordion toggle icon
-$(".card-header").click(() => {
-  $(this).toggleClass("active");
+$('.card-header').click(() => {
+  $(this).toggleClass('active');
 });
 
 // Initialize popover
 $('[data-toggle="popover"]').popover();
 
 // Make popover dismissable
-$(".popover-dismiss").popover({
-  trigger: "focus",
+$('.popover-dismiss').popover({
+  trigger: 'focus',
 });
 
 // window.setInterval(() => {

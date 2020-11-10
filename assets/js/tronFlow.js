@@ -1,6 +1,7 @@
 let currentAccount;
 let lastTransactionTime;
 let contractAddress;
+let siteLoading = true;
 
 if (window.location.hostname == '127.0.0.1') {
   contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
@@ -43,7 +44,7 @@ $(document).ready(async () => {
 
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-      // clearInterval(checkConnectivity);
+      clearInterval(checkConnectivity);
       if (!connected) {
         showPopup('Connected to Tron LINK.', 'success');
         connected = true;
@@ -87,10 +88,16 @@ $(document).ready(async () => {
         totalProfit = halfProfit = 0;
       }
 
-      $('#withdrawableAmount').val(halfProfit);
+      if (siteLoading) {
+        siteLoading = false
+        runCounter('#withdrawableAmount', halfProfit);
+        runCounter('#withdrawableInterest', halfProfit);
+        runCounter('#totalWithdrawable', totalProfit);
+      }
+      // $('#withdrawableAmount').val(halfProfit);
       $('.deduction').text(halfProfit);
-      $('#withdrawableInterest').val(halfProfit);
-      $('#totalWithdrawable').val(totalProfit);
+      // $('#withdrawableInterest').val(halfProfit);
+      // $('#totalWithdrawable').val(totalProfit);
       $('#invested').text(totalProfit);
       $('#withdrawal').text((halfProfit / 2).toFixed(6));
 
@@ -104,7 +111,6 @@ $(document).ready(async () => {
           parseFloat($('#actualCapital').val()) - parseFloat(halfProfit)
         ).toFixed(6)
       );
-
       getBalanceOfAccount();
     } else {
       if (connected) {
@@ -273,4 +279,36 @@ function showPopup(msg, type) {
   window.setTimeout(() => {
     $(`.${type}-popover`).removeClass('show');
   }, 3 * 1000);
+}
+
+function runCounter(id, value) {
+  $({ Counter: 0 }).animate(
+    {
+      Counter: value,
+    },
+    {
+      duration: 1000,
+      easing: 'swing',
+      step: function (now) {
+        $(id).val(now.toFixed(6));
+      },
+    }
+  );
+
+  // $(id).each(function () {
+  //   $(this)
+  //     .prop('Counter', 0)
+  //     .animate(
+  //       {
+  //         Counter: value,
+  //       },
+  //       {
+  //         duration: 1000,
+  //         easing: 'swing',
+  //         step: function (now) {
+  //           $(this).val(now.toFixed(6));
+  //         },
+  //       }
+  //     );
+  // });
 }
