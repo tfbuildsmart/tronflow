@@ -1,11 +1,11 @@
 let currentAccount;
 let lastTransactionTime;
-let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
-let siteLoading = true;
-
-const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let invested;
+
+let siteLoading = true;
 let connected = false;
+const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
+let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 
 window.addEventListener('message', (e) => {
   if (e.data?.message?.action == 'tabReply') {
