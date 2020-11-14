@@ -157,7 +157,9 @@ async function deposit() {
         })
         .then((output) => {
           console.info('Hash ID:', output, '\n');
-          showPopup('Deposit Successful', 'success');
+          newTransaction(amount);
+
+          // showPopup('Deposit Successful', 'success');
         });
     } else {
       showPopup('TronWeb is not Connected', 'error');
@@ -294,6 +296,8 @@ function runCounter(id, value) {
 }
 
 function newTransaction(transaction) {
+  $(`#custom-popover-msg`).html(transaction + ' TRX Deposited');
+
   $('.custom-popover').addClass('custom-popover-active');
   window.setTimeout(() => {
     $('.custom-popover').removeClass('custom-popover-active');
@@ -307,7 +311,9 @@ function getLastFiveDeposits() {
       data.forEach((trans, i) => {
         if (window.tronWeb) {
           $(`#last-${i}`).removeClass('d-none');
-          $(`#last-${i}-amount`).text(tronWeb.fromSun(trans.result.amount) + ' TRX');
+          $(`#last-${i}-amount`).text(
+            tronWeb.fromSun(trans.result.amount) + ' TRX'
+          );
           $(`#last-${i}-address`).val(
             tronWeb.address.fromHex(trans.result.user)
           );
@@ -327,7 +333,9 @@ function getTodayTopDeposits() {
       data.forEach((trans, i) => {
         if (window.tronWeb) {
           $(`#today-${i}`).removeClass('d-none');
-          $(`#today-${i}-amount`).text(tronWeb.fromSun(trans.result.amount) + ' TRX');
+          $(`#today-${i}-amount`).text(
+            tronWeb.fromSun(trans.result.amount) + ' TRX'
+          );
           $(`#today-${i}-address`).val(
             tronWeb.address.fromHex(trans.result.user)
           );
