@@ -6,6 +6,9 @@ let siteLoading = true;
 let connected = false;
 const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
+// let serverUrl = 'http://localhost:3050/api/';
+let serverUrl = 'https://arcane-spire-90140.herokuapp.com/api/';
+let tronScan = 'https://tronscan.org/#/transaction/';
 
 window.addEventListener('message', (e) => {
   if (e.data?.message?.action == 'tabReply') {
@@ -296,3 +299,68 @@ function newTransaction(transaction) {
     $('.custom-popover').removeClass('custom-popover-active');
   }, 3000);
 }
+
+// async function postData(url = '', data = {}) {
+//   // Default options are marked with *
+//   const response = await fetch(url, {
+//     method: 'GET', // *GET, POST, PUT, DELETE, etc.
+//     mode: 'cors', // no-cors, *cors, same-origin
+//     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+//     credentials: 'same-origin', // include, *same-origin, omit
+//     headers: {
+//       'Content-Type': 'application/json'
+//       // 'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     redirect: 'follow', // manual, *follow, error
+//     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+//     body: JSON.stringify(data) // body data type must match "Content-Type" header
+//   });
+//   return response.json(); // parses JSON response into native JavaScript objects
+// }
+
+// postData('https://arcane-spire-90140.herokuapp.com/api/events/last-day')
+//   .then(data => {
+//     console.log(data); // JSON data parsed by `data.json()` call
+//   });
+
+function getLastFiveDeposits() {
+  fetch(`${serverUrl}events/last-five`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        $(`#last-${i}`).removeClass('d-none');
+        $(`#last-${i}-amount`).text(trans.result.amount / 1000000 + ' TRX');
+        $(`#last-${i}-address`).val(trans.contract_address);
+        $(`#last-${i}-link`).attr('href', `${tronScan}${trans.transaction_id}`);
+      });
+    });
+}
+
+function getTodayTopDeposits() {
+  fetch(`${serverUrl}events/today-top`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        $(`#today-${i}`).removeClass('d-none');
+        $(`#today-${i}-amount`).text(trans.result.amount / 1000000 + ' TRX');
+        $(`#today-${i}-address`).val(trans.contract_address);
+        $(`#today-${i}-link`).attr('href', `${tronScan}${trans.transaction_id}`);
+      });
+    });
+}
+
+function getLastDayTopDeposits() {
+  fetch(`${serverUrl}events/last-day`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        $(`#last-day-${i}`).removeClass('d-none');
+        $(`#last-day-${i}-amount`).text(trans.result.amount / 1000000 + ' TRX');
+        $(`#last-day-${i}-address`).val(trans.contract_address);
+        $(`#last-day-${i}-link`).attr('href', `${tronScan}${trans.transaction_id}`);
+      });
+    });
+}
+getLastFiveDeposits();
+getTodayTopDeposits();
+getLastDayTopDeposits();
