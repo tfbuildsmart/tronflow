@@ -227,7 +227,8 @@ async function deposit() {
         .then((output) => {
           console.info('Hash ID:', output, '\n');
           newTransaction(amount);
-
+          getLastFiveDeposits();
+          getTodayTopDeposits();
           // showPopup('Deposit Successful', 'success');
         });
     } else {
