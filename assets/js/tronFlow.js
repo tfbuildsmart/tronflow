@@ -10,6 +10,75 @@ let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 let serverUrl = 'https://arcane-spire-90140.herokuapp.com/api/';
 let tronScan = 'https://tronscan.org/#/transaction/';
 
+function getLastFiveDeposits() {
+  fetch(`${serverUrl}events/last-five`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        if (window.tronWeb) {
+          let amount = tronWeb.fromSun(trans.result.amount);
+          $(`#last-${i}`).removeClass('d-none');
+          $(`#last-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
+          $(`#last-${i}-address`).val(
+            tronWeb.address.fromHex(trans.result.user)
+          );
+          $(`#last-${i}-link`).attr(
+            'href',
+            `${tronScan}${trans.transaction_id}`
+          );
+        }
+      });
+    });
+}
+
+function getTodayTopDeposits() {
+  fetch(`${serverUrl}events/today-top`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        if (window.tronWeb) {
+          let amount = tronWeb.fromSun(trans.result.amount);
+          $(`#today-${i}`).removeClass('d-none');
+          $(`#today-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
+          $(`#today-${i}-address`).val(
+            tronWeb.address.fromHex(trans.result.user)
+          );
+          $(`#today-${i}-link`).attr(
+            'href',
+            `${tronScan}${trans.transaction_id}`
+          );
+        }
+      });
+    });
+}
+
+function getLastDayTopDeposits() {
+  fetch(`${serverUrl}events/last-day`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        if (window.tronWeb) {
+          let amount = tronWeb.fromSun(trans.result.amount);
+          $(`#last-day-${i}`).removeClass('d-none');
+          $(`#last-day-${i}-amount`).text(
+            parseFloat(amount).toFixed(2) + ' TRX'
+          );
+          $(`#last-day-${i}-address`).val(
+            tronWeb.address.fromHex(trans.result.user)
+          );
+          $(`#last-day-${i}-link`).attr(
+            'href',
+            `${tronScan}${trans.transaction_id}`
+          );
+        }
+      });
+    });
+}
+
+getLastFiveDeposits();
+getTodayTopDeposits();
+getLastDayTopDeposits();
+
 window.addEventListener('message', (e) => {
   if (e.data?.message?.action == 'tabReply') {
     console.warn('tabReply event', e.data.message);
@@ -303,72 +372,3 @@ function newTransaction(transaction) {
     $('.custom-popover').removeClass('custom-popover-active');
   }, 3000);
 }
-
-function getLastFiveDeposits() {
-  fetch(`${serverUrl}events/last-five`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
-          $(`#last-${i}`).removeClass('d-none');
-          $(`#last-${i}-amount`).text(
-            tronWeb.fromSun(trans.result.amount) + ' TRX'
-          );
-          $(`#last-${i}-address`).val(
-            tronWeb.address.fromHex(trans.result.user)
-          );
-          $(`#last-${i}-link`).attr(
-            'href',
-            `${tronScan}${trans.transaction_id}`
-          );
-        }
-      });
-    });
-}
-
-function getTodayTopDeposits() {
-  fetch(`${serverUrl}events/today-top`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
-          $(`#today-${i}`).removeClass('d-none');
-          $(`#today-${i}-amount`).text(
-            tronWeb.fromSun(trans.result.amount) + ' TRX'
-          );
-          $(`#today-${i}-address`).val(
-            tronWeb.address.fromHex(trans.result.user)
-          );
-          $(`#today-${i}-link`).attr(
-            'href',
-            `${tronScan}${trans.transaction_id}`
-          );
-        }
-      });
-    });
-}
-
-function getLastDayTopDeposits() {
-  fetch(`${serverUrl}events/last-day`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
-          $(`#last-day-${i}`).removeClass('d-none');
-          $(`#last-day-${i}-amount`).text(
-            tronWeb.fromSun(trans.result.amount) + ' TRX'
-          );
-          $(`#last-day-${i}-address`).val(
-            tronWeb.address.fromHex(trans.result.user)
-          );
-          $(`#last-day-${i}-link`).attr(
-            'href',
-            `${tronScan}${trans.transaction_id}`
-          );
-        }
-      });
-    });
-}
-getLastFiveDeposits();
-getTodayTopDeposits();
-getLastDayTopDeposits();
