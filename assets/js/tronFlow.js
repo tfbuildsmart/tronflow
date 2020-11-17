@@ -10,6 +10,27 @@ let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 let serverUrl = 'https://arcane-spire-90140.herokuapp.com/api/';
 let tronScan = 'https://tronscan.org/#/transaction/';
 
+function getTodayTopDeposits() {
+  fetch(`${serverUrl}events/today-top`)
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((trans, i) => {
+        if (window.tronWeb) {
+          let amount = tronWeb.fromSun(trans.result.amount);
+          $(`#today-${i}`).removeClass('d-none');
+          $(`#today-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
+          $(`#today-${i}-address`).val(
+            tronWeb.address.fromHex(trans.result.user)
+          );
+          $(`#today-${i}-link`).attr(
+            'href',
+            `${tronScan}${trans.transaction_id}`
+          );
+        }
+      });
+    });
+}
+
 function getLastFiveDeposits() {
   fetch(`${serverUrl}events/last-five`)
     .then((response) => response.json())
@@ -31,26 +52,10 @@ function getLastFiveDeposits() {
     });
 }
 
-function getTodayTopDeposits() {
-  fetch(`${serverUrl}events/today-top`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
-          let amount = tronWeb.fromSun(trans.result.amount);
-          $(`#today-${i}`).removeClass('d-none');
-          $(`#today-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
-          $(`#today-${i}-address`).val(
-            tronWeb.address.fromHex(trans.result.user)
-          );
-          $(`#today-${i}-link`).attr(
-            'href',
-            `${tronScan}${trans.transaction_id}`
-          );
-        }
-      });
-    });
-}
+const getDataFromServer = () => {
+  getLastFiveDeposits();
+  getTodayTopDeposits();
+};
 
 function getLastDayTopDeposits() {
   fetch(`${serverUrl}events/last-day`)
@@ -74,10 +79,14 @@ function getLastDayTopDeposits() {
       });
     });
 }
-
-getLastFiveDeposits();
-getTodayTopDeposits();
 getLastDayTopDeposits();
+
+function startInterval(seconds, callback) {
+  callback();
+  return setInterval(callback, seconds * 1000);
+}
+
+startInterval(30, getDataFromServer);
 
 window.addEventListener('message', (e) => {
   if (e.data?.message?.action == 'tabReply') {
