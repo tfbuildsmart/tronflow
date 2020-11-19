@@ -1,4 +1,22 @@
+/** Timer */
+const now = new Date();
+const day = now.getDate();
+const month = now.getMonth() + 1;
+const year = now.getFullYear();
+
+const formattedTime = month + '/' + day + '/' + year + ' 23:59:59';
+
 $(document).ready(function () {
+  /** Timer */
+  $('#timer').countdown(
+    {
+      date: formattedTime, // TODO Date format: 07/27/2017 17:00:00
+      day: 'Day',
+      days: 'Days',
+    },
+    () => {}
+  );
+
   // Add smooth scrolling to all links
   $('a').on('click', function (event) {
     // Make sure this.hash has a value before overriding default behavior
