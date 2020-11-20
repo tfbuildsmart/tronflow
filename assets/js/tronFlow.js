@@ -7,11 +7,11 @@ let connected = false;
 const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 // let serverUrl = 'http://localhost:3050/api/';
-let serverUrl = 'https://arcane-spire-90140.herokuapp.com/api/';
+let serverUrl = 'https://arcane-spire-90140.herokuapp.com/';
 let tronScan = 'https://tronscan.org/#/transaction/';
 
 function getTodayTopDeposits() {
-  fetch(`${serverUrl}events/today-top`)
+  fetch(`${serverUrl}api/events/today-top`)
     .then((response) => response.json())
     .then((data) => {
       data.forEach((trans, i) => {
@@ -32,7 +32,7 @@ function getTodayTopDeposits() {
 }
 
 function getLastFiveDeposits() {
-  fetch(`${serverUrl}events/last-five`)
+  fetch(`${serverUrl}api/events/last-five`)
     .then((response) => response.json())
     .then((data) => {
       data.forEach((trans, i) => {
@@ -58,7 +58,7 @@ const getDataFromServer = () => {
 };
 
 function getLastDayTopDeposits() {
-  fetch(`${serverUrl}events/last-day`)
+  fetch(`${serverUrl}api/events/last-day`)
     .then((response) => response.json())
     .then((data) => {
       data.forEach((trans, i) => {
@@ -119,6 +119,11 @@ $(document).ready(async () => {
   if (window.location.hostname == '127.0.0.1' || params.has('testing')) {
     contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
   }
+  const socket = io(serverUrl);
+  //  socket.emit('chat message', $('#m').val());
+  socket.on('new-transaction', function (msg) {
+    newTransaction(msg);
+  });
   var checkConnectivity = setInterval(async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
       // clearInterval(checkConnectivity);
@@ -198,7 +203,7 @@ $(document).ready(async () => {
         connected = false;
       }
     }
-  }, 2000);
+  }, 5000);
 });
 //----------------//
 async function getBalanceOfAccount() {
