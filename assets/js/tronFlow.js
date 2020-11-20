@@ -6,7 +6,6 @@ let siteLoading = true;
 let connected = false;
 const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
 let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
-// let serverUrl = 'http://localhost:3050/api/';
 let serverUrl = 'https://arcane-spire-90140.herokuapp.com/';
 let tronScan = 'https://tronscan.org/#/transaction/';
 
@@ -30,6 +29,7 @@ function getTodayTopDeposits() {
       });
     });
 }
+getTodayTopDeposits();
 
 function getLastFiveDeposits() {
   fetch(`${serverUrl}api/events/last-five`)
@@ -51,6 +51,7 @@ function getLastFiveDeposits() {
       });
     });
 }
+getLastFiveDeposits();
 
 const getDataFromServer = () => {
   getLastFiveDeposits();
@@ -119,12 +120,13 @@ $(document).ready(async () => {
   if (window.location.hostname == '127.0.0.1' || params.has('testing')) {
     contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
   }
-  const socket = io(serverUrl);
+  const socket = io('https://arcane-spire-90140.herokuapp.com:26893/');
   //  socket.emit('chat message', $('#m').val());
-  socket.on('new-transaction', function (msg) {
-    newTransaction(msg);
+  socket.on('transaction', (msg) => {
+    console.warn(msg);
+    // newTransaction(msg);
   });
-  var checkConnectivity = setInterval(async () => {
+  const contractData = async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
       // clearInterval(checkConnectivity);
       if (!connected) {
@@ -203,7 +205,8 @@ $(document).ready(async () => {
         connected = false;
       }
     }
-  }, 5000);
+  };
+  startInterval(3, contractData);
 });
 //----------------//
 async function getBalanceOfAccount() {
@@ -289,7 +292,7 @@ async function reinvest() {
 async function getTotalInvested(contract) {
   let totalInvested = await contract.totalInvested().call();
   $('#totalInvested').text(
-    thousands_separators(parseInt(totalInvested.toNumber() / 1000000))
+    thousandsSeparators(parseInt(totalInvested.toNumber() / 1000000))
   );
 }
 
@@ -329,7 +332,7 @@ async function getProfit(contract) {
   return await contract.getProfit(currentAccount).call();
 }
 
-function copy() {
+copy = () => {
   /* Get the text field */
   var copyText = document.getElementById('accountRef');
 
@@ -341,19 +344,15 @@ function copy() {
   document.execCommand('copy');
 
   showPopup('Copied', 'success');
-}
+};
 
-function thousands_separators(num) {
+thousandsSeparators = (num) => {
   var num_parts = num.toString().split('.');
   num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return num_parts.join('.');
-}
+};
 
-/**
- * show Popup
- * @param {*} error
- */
-function showPopup(msg, type) {
+showPopup = (msg, type) => {
   $(`#popup-${type}-msg`).html(msg);
 
   $('.popup').removeClass('show');
@@ -362,9 +361,9 @@ function showPopup(msg, type) {
   window.setTimeout(() => {
     $(`.${type}-popover`).removeClass('show');
   }, 3 * 1000);
-}
+};
 
-function runCounter(id, value) {
+runCounter = (id, value) => {
   $({ Counter: 0 }).animate(
     {
       Counter: value,
@@ -377,13 +376,13 @@ function runCounter(id, value) {
       },
     }
   );
-}
+};
 
-function newTransaction(transaction) {
-  $(`#custom-popover-msg`).html(transaction + ' TRX Deposited');
+newTransaction = (amount) => {
+  $(`#custom-popover-msg`).html(amount + ' TRX Deposited');
 
   $('.custom-popover').addClass('custom-popover-active');
   window.setTimeout(() => {
     $('.custom-popover').removeClass('custom-popover-active');
   }, 3000);
-}
+};
