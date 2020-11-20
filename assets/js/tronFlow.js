@@ -120,12 +120,6 @@ $(document).ready(async () => {
   if (window.location.hostname == '127.0.0.1' || params.has('testing')) {
     contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
   }
-  const socket = io('https://arcane-spire-90140.herokuapp.com:26893/');
-  //  socket.emit('chat message', $('#m').val());
-  socket.on('transaction', (msg) => {
-    console.warn(msg);
-    // newTransaction(msg);
-  });
   const contractData = async () => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
       // clearInterval(checkConnectivity);
