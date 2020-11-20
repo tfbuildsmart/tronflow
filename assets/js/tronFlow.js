@@ -1,6 +1,7 @@
 let currentAccount;
 let lastTransactionTime;
 let invested;
+let lastTrans = null;
 
 let siteLoading = true;
 let connected = false;
@@ -38,6 +39,14 @@ function getLastFiveDeposits() {
       data.forEach((trans, i) => {
         if (window.tronWeb) {
           let amount = tronWeb.fromSun(trans.result.amount);
+          if (i == 0) {
+            if (lastTrans != trans._id) {
+              newTransaction(amount);
+              lastTrans = trans._id;
+            } else {
+              lastTrans = trans._id;
+            }
+          }
           $(`#last-${i}`).removeClass('d-none');
           $(`#last-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
           $(`#last-${i}-address`).val(
@@ -237,7 +246,7 @@ async function deposit() {
         })
         .then((output) => {
           console.info('Hash ID:', output, '\n');
-          newTransaction(amount);
+          // newTransaction(amount);
           getLastFiveDeposits();
           getTodayTopDeposits();
           // showPopup('Deposit Successful', 'success');
