@@ -42,7 +42,7 @@
 			var date = new Date();
 
 			// turn date to utc
-			var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+			var utc = date.getTime() + (date.getTimezoneOffset() * 60000)+ (24 * 60 * 60 * 1000);
 
 			// set new Date object
 			var new_date = new Date(utc + (3600000*settings.offset));

@@ -11,10 +11,9 @@ $(document).ready(function () {
   $('#timer').countdown(
     {
       date: formattedTime, // TODO Date format: 07/27/2017 17:00:00
-      day: 'Day',
-      days: 'Days',
+      // offset: +2,
     },
-    () => {}
+    () => { }
   );
 
   // Add smooth scrolling to all links
