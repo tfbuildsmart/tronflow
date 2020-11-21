@@ -42,7 +42,7 @@
 			var date = new Date();
 
 			// turn date to utc
-			var utc = date.getTime() + (date.getTimezoneOffset() * 60000)+ (24 * 60 * 60 * 1000);
+			var utc = date.getTime() + (date.getTimezoneOffset() * 60000);
 
 			// set new Date object
 			var new_date = new Date(utc + (3600000*settings.offset));
@@ -60,6 +60,7 @@
 			// difference of dates
 			var difference = target_date - current_date;
 
+			console.warn(target_date, current_date, difference);
 			// if difference is negative than it's pass the target date
 			if (difference < 0) {
 				// stop timer

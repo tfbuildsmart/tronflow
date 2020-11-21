@@ -1,10 +1,17 @@
 /** Timer */
 const now = new Date();
-const day = now.getDate();
-const month = now.getMonth() + 1;
-const year = now.getFullYear();
+
+// turn date to utc
+var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+
+// set new Date object
+var utcNow = new Date(utc);
+const day = utcNow.getDate();
+const month = utcNow.getMonth() + 1;
+const year = utcNow.getFullYear();
 
 const formattedTime = month + '/' + day + '/' + year + ' 23:59:59';
+console.error(formattedTime);
 
 $(document).ready(function () {
   /** Timer */
