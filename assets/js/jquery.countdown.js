@@ -1,9 +1,3 @@
-// CountDown Clock
-// Version   : 1.0.2
-// Developer : Ekrem KAYA
-// Website   : https://e-piksel.com
-// GitHub    : https://github.com/epiksel/countdown
-
 (function ($) {
 	$.fn.countdown = function (options, callback) {
 		var settings = $.extend({

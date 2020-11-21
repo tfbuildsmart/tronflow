@@ -11,7 +11,6 @@ const month = utcNow.getMonth() + 1;
 const year = utcNow.getFullYear();
 
 const formattedTime = month + '/' + day + '/' + year + ' 23:59:59';
-console.error(formattedTime);
 
 $(document).ready(function () {
   /** Timer */
