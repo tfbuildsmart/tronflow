@@ -40,7 +40,7 @@ function getLastFiveDeposits() {
         if (window.tronWeb) {
           let amount = tronWeb.fromSun(trans.result.amount);
           if (i == 0) {
-            if (lastTrans != trans._id) {
+            if (lastTrans && lastTrans != trans._id) {
               newTransaction(amount);
               lastTrans = trans._id;
             } else {
@@ -209,7 +209,7 @@ $(document).ready(async () => {
       }
     }
   };
-  startInterval(3, contractData);
+  startInterval(4, contractData);
 });
 //----------------//
 async function getBalanceOfAccount() {
