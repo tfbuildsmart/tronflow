@@ -10,12 +10,17 @@ let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 let serverUrl = 'https://arcane-spire-90140.herokuapp.com/';
 let tronScan = 'https://tronscan.org/#/transaction/';
 
-function getTodayTopDeposits() {
-  fetch(`${serverUrl}api/events/today-top`)
+function startInterval(seconds, callback) {
+  callback();
+  return setInterval(callback, seconds * 1000);
+}
+
+function getDataFromServer() {
+  fetch(`${serverUrl}api/events/today`)
     .then((response) => response.json())
     .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
+      if (window.tronWeb) {
+        data.topFiveTrans.forEach((trans, i) => {
           let amount = tronWeb.fromSun(trans.result.amount);
           $(`#today-${i}`).removeClass('d-none');
           $(`#today-${i}-amount`).text(parseFloat(amount).toFixed(2) + ' TRX');
@@ -26,18 +31,9 @@ function getTodayTopDeposits() {
             'href',
             `${tronScan}${trans.transaction_id}`
           );
-        }
-      });
-    });
-}
-getTodayTopDeposits();
+        });
 
-function getLastFiveDeposits() {
-  fetch(`${serverUrl}api/events/last-five`)
-    .then((response) => response.json())
-    .then((data) => {
-      data.forEach((trans, i) => {
-        if (window.tronWeb) {
+        data.lastFiveTrans.forEach((trans, i) => {
           let amount = tronWeb.fromSun(trans.result.amount);
           if (i == 0) {
             if (lastTrans && lastTrans != trans._id) {
@@ -56,16 +52,12 @@ function getLastFiveDeposits() {
             'href',
             `${tronScan}${trans.transaction_id}`
           );
-        }
-      });
+        });
+      }
     });
 }
-getLastFiveDeposits();
 
-const getDataFromServer = () => {
-  getLastFiveDeposits();
-  getTodayTopDeposits();
-};
+startInterval(30, getDataFromServer);
 
 function getLastDayTopDeposits() {
   fetch(`${serverUrl}api/events/last-day`)
@@ -90,13 +82,6 @@ function getLastDayTopDeposits() {
     });
 }
 getLastDayTopDeposits();
-
-function startInterval(seconds, callback) {
-  callback();
-  return setInterval(callback, seconds * 1000);
-}
-
-startInterval(30, getDataFromServer);
 
 window.addEventListener('message', (e) => {
   if (e.data?.message?.action == 'tabReply') {
