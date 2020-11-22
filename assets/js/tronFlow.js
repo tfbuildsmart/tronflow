@@ -18,7 +18,6 @@ function startInterval(seconds, callback) {
 function getDataFromServer() {
   let url = `${serverUrl}api/events/today`;
   if (currentAccount) {
-    currentAccount = 'TXs5yZCsoxnAaLLya226YCkrqpFRu77f6X';
     const currentUser = '0x' + tronWeb.address.toHex(currentAccount).substr(2);
     url = `${serverUrl}api/events/today?userAddress=${currentUser}`;
   }
