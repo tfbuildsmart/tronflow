@@ -54,7 +54,6 @@
 			// difference of dates
 			var difference = target_date - current_date;
 
-			console.warn(target_date, current_date, difference);
 			// if difference is negative than it's pass the target date
 			if (difference < 0) {
 				// stop timer

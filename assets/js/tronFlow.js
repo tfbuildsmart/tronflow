@@ -16,10 +16,19 @@ function startInterval(seconds, callback) {
 }
 
 function getDataFromServer() {
-  fetch(`${serverUrl}api/events/today`)
+  let url = `${serverUrl}api/events/today`;
+  if (currentAccount) {
+    const currentUser = '0x' + (tronWeb.address.toHex(currentAccount)).substr(2);
+    url = `${serverUrl}api/events/today?userAddress=${currentUser}`;
+  }
+  fetch(url)
     .then((response) => response.json())
     .then((data) => {
       if (window.tronWeb) {
+        if (data.user) {
+          let amount = tronWeb.fromSun(data.user.amount);
+          $('#deposits').text(amount);
+        }
         data.topFiveTrans.forEach((trans, i) => {
           let amount = tronWeb.fromSun(trans.result.amount);
           $(`#today-${i}`).removeClass('d-none');
@@ -208,6 +217,7 @@ async function getBalanceOfAccount() {
     return balance;
   });
 }
+
 async function deposit() {
   let address = $('#refererAddress').val();
   let amount = $('#depositAmount').val();
