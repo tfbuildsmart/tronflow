@@ -2,10 +2,12 @@ let currentAccount;
 let lastTransactionTime;
 let invested;
 let lastTrans = null;
+let amountuser;
+let statstotalprof;
 
 let siteLoading = true;
 let connected = false;
-const defaultSponsor = 'TTDKQAFBuRg52wC6dtrnnMti7HTNjqCo1v';
+const defaultSponsor = 'TGiyNohpFQcCauqqaePLtH8JSop3jBeRFn';
 let contractAddress = 'TFrBVjdpsuWQUMtjFpMxhUKg2q3oa6rgGv';
 let serverUrl = 'https://arcane-spire-90140.herokuapp.com/';
 let tronScan = 'https://tronscan.org/#/transaction/';
@@ -18,6 +20,7 @@ function startInterval(seconds, callback) {
 function getDataFromServer() {
   let url = `${serverUrl}api/events/today`;
   if (currentAccount) {
+        
     const currentUser = '0x' + tronWeb.address.toHex(currentAccount).substr(2);
     url = `${serverUrl}api/events/today?userAddress=${currentUser}`;
   }
@@ -27,9 +30,19 @@ function getDataFromServer() {
       if (window.tronWeb) {
         if (data.user) {
           let amount = tronWeb.fromSun(data.user.amount);
+          amountuser = amount;
           $('#deposits').text(amount);
+     //   let  globaldepamount = $('#deposits').val();
+      //      if (parseInt(amount) > 0) { 
+             // $('#aff4').text(globaldepamount);
+      //       $('#aff4').text(amount);
+        //    }
+          
+          
+         
         } else {
           $('#deposits').text(0);
+          
         }
         data.topFiveTrans.forEach((trans, i) => {
           let amount = tronWeb.fromSun(trans.result.amount);
@@ -142,6 +155,7 @@ $(document).ready(async () => {
       getTotalInvested(contract);
       getTotalInvestors(contract);
       getContractBalanceRate(contract);
+      getuserstats(contract);
       invested = await getDeposit(contract);
       let profit, totalProfit, halfProfit;
 
@@ -150,6 +164,9 @@ $(document).ready(async () => {
 
         totalProfit = (profit.toNumber() / 1000000).toFixed(6);
         halfProfit = (profit.toNumber() / 2000000).toFixed(6);
+        statstotalprof = (profit.toNumber() / 1000000).toFixed(6);
+        $('#statstotalprof').text(statstotalprof);
+        
 
         $('#refererAddress').val('You Already have a Sponsor');
         $('#refererAddress').prop('disabled', true);
@@ -179,9 +196,12 @@ $(document).ready(async () => {
         runCounter('#totalWithdrawable', totalProfit);
       } else {
         $('#actualCapital').val(invested);
+        
         $('#withdrawableAmount').val(halfProfit);
         $('#withdrawableInterest').val(halfProfit);
         $('#totalWithdrawable').val(totalProfit);
+        
+        
       }
       $('.deduction').text(halfProfit);
       $('#invested').text(totalProfit);
@@ -198,6 +218,7 @@ $(document).ready(async () => {
         ).toFixed(6)
       );
       getBalanceOfAccount();
+      getBalanceOfContract()
     } else {
       if (connected) {
         showPopup('Tron LINK is disconnected.', 'error');
@@ -219,6 +240,18 @@ async function getBalanceOfAccount() {
     return balance;
   });
 }
+async function getBalanceOfContract() {
+  return tronWeb.trx.getBalance(contractAddress).then((res) => {
+    const contbalance = parseInt(res / 1000000);
+    if (contbalance) {
+      $('#contbalance').text(thousandsSeparators(contbalance));
+    } else {
+      $('#contbalance').text(0);
+    }
+    return contbalance;
+  });
+}      
+      
 
 async function deposit() {
   let address = $('#refererAddress').val();
@@ -230,6 +263,8 @@ async function deposit() {
     showPopup('Minimum Amount is 50 TRX', 'error');
   } else if (amount > (await getBalanceOfAccount())) {
     showPopup('Insufficient Balance', 'error');
+  } else if ((await getBalanceOfAccount()) - amount < 20) {
+    showPopup('You need a few(15-20) TRX in your wallet to make an transaction', 'error');
   } else {
     if (parseInt(invested) > 0) {
       address = defaultSponsor;
@@ -302,7 +337,9 @@ async function getTotalInvested(contract) {
  */
 async function getTotalInvestors(contract) {
   let totalInvestors = await contract.totalPlayers().call();
-  $('#totalInvestors').text(totalInvestors.toNumber());
+  $('#totalInvestors').text(
+    thousandsSeparators(totalInvestors.toNumber())
+                       );
 }
 
 /**
@@ -313,6 +350,83 @@ async function getContractBalanceRate(contract) {
   let contractbalanceRate = await contract.getContractBalanceRate().call();
   $('#roi').text((contractbalanceRate.toNumber() / 10 + 1).toFixed(1));
 }
+
+/**
+ * get user stats
+ * @param {*} contract
+ */
+async function getuserstats(contract){
+  
+let invester = await contract.players(currentAccount).call();
+  $('#address2').text(currentAccount);
+  const userpayout = invester.payoutSum.toNumber() / 1000000;
+    $('#userpayout').text(userpayout.toFixed(2));
+  const sponsoraddress1 = invester.affFrom;
+  const sponsoraddress= tronWeb.address.fromHex(sponsoraddress1);
+ // hex_address = tronWeb.address.toHex(address);
+  if (sponsoraddress == 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb'){
+  $('#sponsoraddress').text("You have no Sponsor");
+  }else{
+    $('#sponsoraddress').text(sponsoraddress);
+  }
+  const refrewards = invester.affRewards.toNumber() / 1000000;
+    const aff1 = invester.aff1sum.toNumber();
+    const aff2 = invester.aff2sum.toNumber();
+    const aff3 = invester.aff3sum.toNumber();
+    const aff4 = invester.aff4sum.toNumber();
+    $('#refrewards').text(refrewards.toFixed(2));
+    $('#aff1').text(aff1);
+    $('#aff2').text(aff2);
+    $('#aff3').text(aff3);
+    $('#aff4').text(aff4);
+  $('#statsactivecap').text(invested);
+
+  
+  $('#statsreinvest').text(Math.abs(
+    parseFloat(
+        parseFloat(
+          parseFloat(invested) - parseFloat(amountuser) - parseFloat($('#refrewards').text()) + parseFloat($('#userpayout').text() / 4)
+        ) * 2)).toFixed(1)
+      ); 
+  
+ 
+  
+  $('#statsinaccap').text(
+    parseFloat(
+      parseFloat($('#statsreinvest').text() / 2) + parseFloat($('#userpayout').text() / 2)
+      )
+    );
+  $('#statstotalcap').text(
+    parseFloat(
+      parseFloat($('#statsinaccap').text()) + parseFloat(invested)
+      )
+    );
+  $('#statsciwith').text(
+    parseFloat(
+      parseFloat($('#statsreinvest').text()) + parseFloat($('#userpayout').text())
+      )
+    );
+  
+  $('#statscigenerated').text(
+    parseFloat(
+        parseFloat($('#statsreinvest').text()) + parseFloat($('#userpayout').text()) + parseFloat(statstotalprof)
+        ).toFixed(2)
+      );
+  
+  $('#statstotaldouble').text(
+    parseFloat(
+        parseFloat(
+          parseFloat($('#statsinaccap').text()) + parseFloat(invested)
+        ) * 2).toFixed(2)
+      ); 
+  
+
+
+
+
+}
+
+
 
 /**
  * get Deposit
