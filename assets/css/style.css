@@ -346,8 +346,8 @@ ul#timer {
 	list-style: none;
 	padding: 0;
 	display: block;
-  text-align: center;
-  color: white;
+  text-align: left;
+  color: green;
 	font-size: 2rem;
 
 }
