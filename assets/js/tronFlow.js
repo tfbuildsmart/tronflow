@@ -172,7 +172,7 @@ $(document).ready(async () => {
         $('#refererAddress').prop('disabled', true);
 
         $('#accountRef').val(
-          window.location.hostname + '?ref=' + currentAccount
+          'https://tronflow.net/?ref=' + currentAccount
         );
       } else {
         if (params.has('ref')) {
@@ -205,6 +205,7 @@ $(document).ready(async () => {
       }
       $('.deduction').text(halfProfit);
       $('#invested').text(totalProfit);
+      $('#withdrawed').text(totalProfit);
       $('#withdrawal').text((halfProfit / 2).toFixed(6));
 
       $('#reinvest-new-balance').text(
@@ -214,7 +215,7 @@ $(document).ready(async () => {
       );
       $('#withdrawal-new-balance').text(
         parseFloat(
-          parseFloat($('#actualCapital').val()) - parseFloat(halfProfit)
+          parseFloat($('#actualCapital').val()) - parseFloat(halfProfit / 2)
         ).toFixed(6)
       );
       getBalanceOfAccount();
