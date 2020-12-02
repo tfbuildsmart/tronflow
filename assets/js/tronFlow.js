@@ -142,9 +142,9 @@ $(document).ready(async () => {
       getTotalInvestors(contract);
       getContractBalanceRate(contract);
 
-      if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+      if (tronWeb.defaultAddress.base58) {
         // clearInterval(checkConnectivity);
-        if (!connected) {
+        if (connected === false) {
           showPopup('Connected to Tron LINK.', 'success');
           connected = true;
         }
@@ -215,7 +215,7 @@ $(document).ready(async () => {
         getBalanceOfAccount();
         getBalanceOfContract();
       } else {
-        if (connected) {
+        if (connected === true) {
           showPopup('Tron LINK is disconnected.', 'error');
           connected = false;
         }
