@@ -4,6 +4,7 @@ let invested;
 let lastTrans = null;
 let amountuser;
 let statstotalprof;
+let myTronWeb;
 
 let siteLoading = true;
 let connected = false;
@@ -134,22 +135,24 @@ $(document).ready(async () => {
     contractAddress = 'TRktZxNpTmbFEchoQtj8U5fpk9Xn42ZnkQ';
   }
   const contractData = async () => {
-    if (window.tronWeb) {
-      const tronWeb = window.tronWeb;
-      const contract = await tronWeb.contract().at(contractAddress);
+    if (window.tronWeb || myTronWeb) {
+      if (!myTronWeb) {
+        myTronWeb = window.tronWeb;
+      }
+      const contract = await myTronWeb.contract().at(contractAddress);
 
       getTotalInvested(contract);
       getTotalInvestors(contract);
       getContractBalanceRate(contract);
 
-      if (tronWeb.defaultAddress.base58) {
+      if (myTronWeb.defaultAddress.base58) {
         // clearInterval(checkConnectivity);
         if (connected === false) {
           showPopup('Connected to Tron LINK.', 'success');
           connected = true;
         }
 
-        currentAccount = tronWeb.defaultAddress.base58;
+        currentAccount = myTronWeb.defaultAddress.base58;
         $('#address').text(currentAccount);
 
         getuserstats(contract);
@@ -226,7 +229,7 @@ $(document).ready(async () => {
 });
 //----------------//
 async function getBalanceOfAccount() {
-  return tronWeb.trx.getBalance(currentAccount).then((res) => {
+  return myTronWeb.trx.getBalance(currentAccount).then((res) => {
     const balance = parseInt(res / 1000000);
     if (balance) {
       $('#balance').text(balance);
@@ -237,7 +240,7 @@ async function getBalanceOfAccount() {
   });
 }
 async function getBalanceOfContract() {
-  return tronWeb.trx.getBalance(contractAddress).then((res) => {
+  return myTronWeb.trx.getBalance(contractAddress).then((res) => {
     const contbalance = parseInt(res / 1000000);
     if (contbalance) {
       $('#contbalance').text(thousandsSeparators(contbalance));
@@ -251,8 +254,8 @@ async function getBalanceOfContract() {
 async function deposit() {
   let address = $('#refererAddress').val();
   let amount = $('#depositAmount').val();
-  const contract = await tronWeb.contract().at(contractAddress);
-  if (!tronWeb.isAddress(address) && parseInt(invested) < 1) {
+  const contract = await myTronWeb.contract().at(contractAddress);
+  if (!myTronWeb.isAddress(address) && parseInt(invested) < 1) {
     showPopup('Please Enter Right Address', 'error');
   } else if (amount < 50) {
     showPopup('Minimum Amount is 50 TRX', 'error');
@@ -267,12 +270,12 @@ async function deposit() {
     if (parseInt(invested) > 0) {
       address = defaultSponsor;
     }
-    if (window.tronWeb) {
-      let contract = await tronWeb.contract().at(contractAddress);
+    if (myTronWeb) {
+      let contract = await myTronWeb.contract().at(contractAddress);
       contract
         .deposit(address)
         .send({
-          callValue: tronWeb.toSun(amount),
+          callValue: myTronWeb.toSun(amount),
         })
         .then((output) => {
           console.info('Hash ID:', output, '\n');
@@ -288,8 +291,8 @@ async function deposit() {
 }
 //withDraw your fund!
 async function withdraw() {
-  if (window.tronWeb) {
-    let contract = await tronWeb.contract().at(contractAddress);
+  if (myTronWeb) {
+    let contract = await myTronWeb.contract().at(contractAddress);
     await contract
       .withdraw()
       .send()
@@ -304,8 +307,8 @@ async function withdraw() {
 }
 //reinvest your fund!
 async function reinvest() {
-  if (window.tronWeb) {
-    let contract = await tronWeb.contract().at(contractAddress);
+  if (myTronWeb) {
+    let contract = await myTronWeb.contract().at(contractAddress);
     await contract
       .reinvest()
       .send()
@@ -357,8 +360,8 @@ async function getuserstats(contract) {
   const userpayout = invester.payoutSum.toNumber() / 1000000;
   $('#userpayout').text(userpayout.toFixed(2));
   const sponsoraddress1 = invester.affFrom;
-  const sponsoraddress = tronWeb.address.fromHex(sponsoraddress1);
-  // hex_address = tronWeb.address.toHex(address);
+  const sponsoraddress = myTronWeb.address.fromHex(sponsoraddress1);
+  // hex_address = myTronWeb.address.toHex(address);
   if (sponsoraddress == 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb') {
     $('#sponsoraddress').text('You have no Sponsor');
   } else {
