@@ -217,7 +217,7 @@ $(document).ready(async () => {
       } else {
         if (connected === true) {
           showPopup('Tron LINK is disconnected.', 'error');
-          connected = false;
+          // connected = false;
         }
       }
     }
