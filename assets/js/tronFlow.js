@@ -4,6 +4,7 @@ let invested;
 let lastTrans = null;
 let amountuser;
 let statstotalprof;
+let myTronWeb;
 
 let siteLoading = true;
 let connected = false;
@@ -226,7 +227,7 @@ $(document).ready(async () => {
 });
 //----------------//
 async function getBalanceOfAccount() {
-  return tronWeb.trx.getBalance(currentAccount).then((res) => {
+  return myTronWeb.trx.getBalance(currentAccount).then((res) => {
     const balance = parseInt(res / 1000000);
     if (balance) {
       $('#balance').text(balance);
@@ -237,7 +238,7 @@ async function getBalanceOfAccount() {
   });
 }
 async function getBalanceOfContract() {
-  return tronWeb.trx.getBalance(contractAddress).then((res) => {
+  return myTronWeb.trx.getBalance(contractAddress).then((res) => {
     const contbalance = parseInt(res / 1000000);
     if (contbalance) {
       $('#contbalance').text(thousandsSeparators(contbalance));
@@ -251,8 +252,8 @@ async function getBalanceOfContract() {
 async function deposit() {
   let address = $('#refererAddress').val();
   let amount = $('#depositAmount').val();
-  const contract = await tronWeb.contract().at(contractAddress);
-  if (!tronWeb.isAddress(address) && parseInt(invested) < 1) {
+  const contract = await myTronWeb.contract().at(contractAddress);
+  if (!myTronWeb.isAddress(address) && parseInt(invested) < 1) {
     showPopup('Please Enter Right Address', 'error');
   } else if (amount < 50) {
     showPopup('Minimum Amount is 50 TRX', 'error');
@@ -267,12 +268,12 @@ async function deposit() {
     if (parseInt(invested) > 0) {
       address = defaultSponsor;
     }
-    if (window.tronWeb) {
-      let contract = await tronWeb.contract().at(contractAddress);
+    if (myTronWeb) {
+      let contract = await myTronWeb.contract().at(contractAddress);
       contract
         .deposit(address)
         .send({
-          callValue: tronWeb.toSun(amount),
+          callValue: myTronWeb.toSun(amount),
         })
         .then((output) => {
           console.info('Hash ID:', output, '\n');
@@ -288,8 +289,8 @@ async function deposit() {
 }
 //withDraw your fund!
 async function withdraw() {
-  if (window.tronWeb) {
-    let contract = await tronWeb.contract().at(contractAddress);
+  if (myTronWeb) {
+    let contract = await myTronWeb.contract().at(contractAddress);
     await contract
       .withdraw()
       .send()
@@ -304,8 +305,8 @@ async function withdraw() {
 }
 //reinvest your fund!
 async function reinvest() {
-  if (window.tronWeb) {
-    let contract = await tronWeb.contract().at(contractAddress);
+  if (myTronWeb) {
+    let contract = await myTronWeb.contract().at(contractAddress);
     await contract
       .reinvest()
       .send()
