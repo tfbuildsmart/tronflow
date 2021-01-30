@@ -17,7 +17,8 @@ html {
 }
 
 body {
-  background-color: #030025;
+ // background-color: #030025;
+   background-color: #000000;
 }
 
 h1,
@@ -109,7 +110,8 @@ header .fixed-top {
 }
 
 header .navbar {
-  background-color: #030025;
+ // background-color: #030025;
+	background-color: #000000;
 }
 
 .logo {
