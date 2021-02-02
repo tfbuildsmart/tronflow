@@ -78,7 +78,12 @@
 
             </ul>
             <div class="d-flex">
-              <p id="address" class="text-white m-0">Connect your wallet</p>
+              <!-- <p id="address" class="text-white m-0">Connect your wallet</p> -->
+              <select class="custom-select" onchange="langChanged(this.value, 'en')">
+                <option value="en" selected>English</option>
+                <option value="es">Spanish</option>
+                <option value="nl">Dutch</option>
+              </select>
             </div>
           </div>
         </nav>

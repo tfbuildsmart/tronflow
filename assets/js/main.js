@@ -67,6 +67,18 @@ $('.popover-dismiss').popover({
 });
 
 function langChanged(selectedLang, currentLang) {
-  const url = window.location.href.replace(`/${currentLang}/`, `/${selectedLang}/`);
-  window.location.href = url;  
+  let url;
+  if (selectedLang == 'en') {
+    url = window.location.href.replace(`/${currentLang}/`, '/');
+  } else if (currentLang == 'en') {
+    if (window.location.href.indexOf('/?') > 0) {
+      url = window.location.href.replace(`/?`, `/${selectedLang}/?`);
+    } else {
+      url = `${window.location.href}${selectedLang}/`;
+    }
+  } else {
+    url = window.location.href.replace(`/${currentLang}/`, `/${selectedLang}/`);
+  }
+  console.log('url ===>>>', url);
+  window.location.href = url;
 }
