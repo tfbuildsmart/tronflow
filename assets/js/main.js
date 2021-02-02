@@ -2,7 +2,7 @@
 const now = new Date();
 
 // turn date to utc
-var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+var utc = now.getTime() + now.getTimezoneOffset() * 60000;
 
 // set new Date object
 var utcNow = new Date(utc);
@@ -19,7 +19,7 @@ $(document).ready(function () {
       date: formattedTime, // TODO Date format: 07/27/2017 17:00:00
       // offset: +2,
     },
-    () => { }
+    () => {}
   );
 
   // Add smooth scrolling to all links
@@ -65,3 +65,8 @@ $('[data-toggle="popover"]').popover();
 $('.popover-dismiss').popover({
   trigger: 'focus',
 });
+
+function langChanged(selectedLang, currentLang) {
+  const url = window.location.href.replace(`/${currentLang}/`, `/${selectedLang}/`);
+  window.location.href = url;  
+}
