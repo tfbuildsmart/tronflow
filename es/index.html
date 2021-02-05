@@ -74,16 +74,16 @@
                   <a class="dropdown-item" href="https://t.me/tronflowofficial" target="_blank">ENGLISH</a>
                 </div>
               </li>
-
-
+              <li class="nav-item dropdown">
+                <select class="custom-select" onchange="langChanged(this.value, 'es')">
+                  <option value="en">English</option>
+                  <option value="es" selected>Spanish</option>
+                  <option value="nl">Dutch</option>
+                </select>
+              </li>
             </ul>
             <div class="d-flex">
-              <!-- <p id="address" class="text-white m-0">Connect your wallet</p> -->
-              <select class="custom-select" onchange="langChanged(this.value, 'es')">
-                <option value="en">English</option>
-                <option value="es" selected>Spanish</option>
-                <option value="nl">Dutch</option>
-              </select>
+              <p id="address" class="text-white m-0">Connect your wallet</p>
             </div>
           </div>
         </nav>

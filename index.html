@@ -74,16 +74,16 @@
                   <a class="dropdown-item" href="https://t.me/tronflowofficial" target="_blank">ENGLISH</a>
                 </div>
               </li>
-
-
+              <li class="nav-item dropdown">
+                <select class="custom-select" onchange="langChanged(this.value, 'en')">
+                  <option value="en" selected>English</option>
+                  <option value="es">Spanish</option>
+                  <option value="nl">Dutch</option>
+                </select>
+              </li>
             </ul>
             <div class="d-flex">
-              <!-- <p id="address" class="text-white m-0">Connect your wallet</p> -->
-              <select class="custom-select" onchange="langChanged(this.value, 'en')">
-                <option value="en" selected>English</option>
-                <option value="es">Spanish</option>
-                <option value="nl">Dutch</option>
-              </select>
+              <p id="address" class="text-white m-0">Connect your wallet</p>
             </div>
           </div>
         </nav>
@@ -670,29 +670,33 @@
 
   <div class="py-4"></div>
 
-	
-<!-- Referral Status Section Start -->
-    <section>
-      <div class="container">
-	<h2 class="sec-title text-center text-white">REFERRAL STATUS</h2>
-	
-	<div class="divider"></div>
-	
 
-	<h5 class="text-white text-center"> Level 1(5%):&nbsp;&nbsp; <span class="text-green" id="aff11">&nbsp;0</span> Referrals</h5>
-	<h5 class="text-white text-center"> Level 2(3%):&nbsp;&nbsp; <span class="text-green" id="aff22">&nbsp;0</span> Referrals</h5>
-	<h5 class="text-white text-center"> Level 3(1%):&nbsp;&nbsp; <span class="text-green" id="aff33">&nbsp;0</span> Referrals</h5>
-	<h5 class="text-white text-center"> Level 4(1%):&nbsp;&nbsp; <span class="text-green" id="aff44">&nbsp;0</span> Referrals</h5>
+  <!-- Referral Status Section Start -->
+  <section>
+    <div class="container">
+      <h2 class="sec-title text-center text-white">REFERRAL STATUS</h2>
 
-	      <h3 class="text-blue text-center">Total Referral Comission: </h3>
-	<h5 class="text-red text-center"><span id="refrewards2">&nbsp;0</span> TRX</h5>
-	<div class="py-2"></div>
-        <hr />
-      </div>
-    </section>
-    <!-- Referral Status Section End -->
+      <div class="divider"></div>
 
-    <div class="py-4"></div>
+
+      <h5 class="text-white text-center"> Level 1(5%):&nbsp;&nbsp; <span class="text-green" id="aff11">&nbsp;0</span>
+        Referrals</h5>
+      <h5 class="text-white text-center"> Level 2(3%):&nbsp;&nbsp; <span class="text-green" id="aff22">&nbsp;0</span>
+        Referrals</h5>
+      <h5 class="text-white text-center"> Level 3(1%):&nbsp;&nbsp; <span class="text-green" id="aff33">&nbsp;0</span>
+        Referrals</h5>
+      <h5 class="text-white text-center"> Level 4(1%):&nbsp;&nbsp; <span class="text-green" id="aff44">&nbsp;0</span>
+        Referrals</h5>
+
+      <h3 class="text-blue text-center">Total Referral Comission: </h3>
+      <h5 class="text-red text-center"><span id="refrewards2">&nbsp;0</span> TRX</h5>
+      <div class="py-2"></div>
+      <hr />
+    </div>
+  </section>
+  <!-- Referral Status Section End -->
+
+  <div class="py-4"></div>
   <!-- Activity Section Start -->
   <section id="top-deposit">
     <div class="container">
